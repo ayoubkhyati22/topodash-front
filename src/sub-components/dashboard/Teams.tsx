@@ -55,8 +55,10 @@ const Teams = () => {
         <thead className="table-light">
           <tr>
             <th>Name</th>
+            <th>Username</th>
             <th>Role</th>
-            <th>Last Activity</th>
+            <th>Téléphone</th>
+
             <th></th>
           </tr>
         </thead>
@@ -79,6 +81,7 @@ const Teams = () => {
                     </div>
                   </div>
                 </td>
+                <td className="align-middle">{item.role}</td>
                 <td className="align-middle">{item.role}</td>
                 <td className="align-middle">{item.lastActivity}</td>
                 <td className="align-middle">
