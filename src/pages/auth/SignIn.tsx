@@ -1,4 +1,8 @@
 //import node module libraries
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../AuthContext";
 import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -6,7 +10,32 @@ import { Link } from "react-router-dom";
 import { useMounted } from "hooks/useMounted";
 
 const SignIn = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const hasMounted = useMounted();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    try {
+      const res = await axios.post("http://localhost:8080/auth/login", {
+        username,
+        password,
+      });
+      if (res.data && res.data.data && res.data.data.token) {
+        login(res.data.data);
+        navigate("/");
+      } else {
+        setError("Invalid response from server");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Login failed");
+    }
+  };
+
   return (
     <Row className="align-items-center justify-content-center g-0 min-vh-100">
       <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
@@ -24,13 +53,15 @@ const SignIn = () => {
             </div>
 
             {hasMounted && (
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                   <Form.Label>Username or email</Form.Label>
                   <Form.Control
-                    type="email"
+                    type="text"
                     name="username"
                     placeholder="Enter address here"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -41,6 +72,8 @@ const SignIn = () => {
                     type="password"
                     name="password"
                     placeholder="**************"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -73,6 +106,7 @@ const SignIn = () => {
                     </div>
                   </div>
                 </div>
+                {error && <div className="text-danger mt-3">{error}</div>}
               </Form>
             )}
           </Card.Body>
