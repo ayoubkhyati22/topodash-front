@@ -1,9 +1,7 @@
 //import node module libraries
 import { Outlet } from "react-router";
-import { Link } from "react-router-dom";
 import Sidebar from "components/navbars/sidebar/Sidebar";
 import Header from "components/navbars/topbar/Header";
-import { Image } from "react-bootstrap";
 import { useState } from "react";
 
 const RootLayout = () => {
