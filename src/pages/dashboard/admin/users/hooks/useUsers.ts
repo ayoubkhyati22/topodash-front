@@ -28,7 +28,7 @@ interface UseUsersResult {
 
 const API_BASE_URL = 'http://localhost:8080';
 
-export const useUsers = (initialPageSize = 6): UseUsersResult => {
+export const useUsers = (initialPageSize = 8): UseUsersResult => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

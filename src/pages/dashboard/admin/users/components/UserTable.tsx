@@ -179,7 +179,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                   </td>
                   <td className="align-middle">{user.phoneNumber}</td>
                   <td className="align-middle">
-                    <UserActions userId={user.id} onAction={onUserAction} />
+                    <UserActions userId={user.id} username={user.username} userEmail={user.email} onAction={onUserAction} />
                   </td>
                 </tr>
               ))}

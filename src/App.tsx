@@ -50,6 +50,11 @@ const App = () => {
           Component: User,
         },
         {
+          id: "country",
+          path: "/countries",
+          Component: Country,
+        },
+        {
           id: "documentation",
           path: "/documentation",
           Component: Documentation,

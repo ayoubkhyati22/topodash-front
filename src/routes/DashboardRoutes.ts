@@ -51,6 +51,19 @@ export const DashboardMenu: DashboardMenuProps[] = [
   },
   {
     id: uuid(),
+    title: "Réferentiel",
+    grouptitle: true,
+    allowedRoles: ["ADMIN"],
+  },
+  {
+    id: uuid(),
+    title: "Pays",
+    icon: "globe",
+    link: "/countries",
+    allowedRoles: ["ADMIN"],
+  },
+  {
+    id: uuid(),
     title: "Documentation",
     grouptitle: true,
   },
