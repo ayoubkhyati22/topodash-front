@@ -1,5 +1,5 @@
 //import node module libraries
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
@@ -14,23 +14,21 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const hasMounted = useMounted();
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", {
+      const res = await axios.post(baseUrl+"auth/login", {
         username,
         password,
       });
-      
-      console.log("Login response:", res.data); // Debug log
-      
+            
       if (res.data && res.data.data && res.data.data.token) {
         const userData = res.data.data;
-        console.log("About to login with:", userData); // Debug log
         login(userData);     
         navigate("/");
       } else {
@@ -41,11 +39,7 @@ const SignIn = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("Current user:", user);
-  }, [user]);
-
-  return (
+  return (   
     <Row className="align-items-center justify-content-center g-0 min-vh-100">
       <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
         <Card className="smooth-shadow-md">
@@ -64,11 +58,11 @@ const SignIn = () => {
             {hasMounted && (
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
-                  <Form.Label>Username or email</Form.Label>
+                  <Form.Label>Username</Form.Label>
                   <Form.Control
                     type="text"
                     name="username"
-                    placeholder="Enter address here"
+                    placeholder="Enter username here"
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     required
@@ -87,19 +81,19 @@ const SignIn = () => {
                   />
                 </Form.Group>
 
-                <div className="d-lg-flex justify-content-between align-items-center mb-4">
+                {/* <div className="d-lg-flex justify-content-between align-items-center mb-4">
                   <Form.Check type="checkbox" id="rememberme">
                     <Form.Check.Input type="checkbox" />
                     <Form.Check.Label>Remember me</Form.Check.Label>
                   </Form.Check>
-                </div>
+                </div> */}
                 <div>
                   <div className="d-grid">
                     <Button variant="primary" type="submit">
                       Sign In
                     </Button>
                   </div>
-                  <div className="d-md-flex justify-content-between mt-4">
+                  {/* <div className="d-md-flex justify-content-between mt-4">
                     <div className="mb-2 mb-md-0">
                       <Link to="/auth/sign-up" className="fs-5">
                         Create An Account{" "}
@@ -113,7 +107,7 @@ const SignIn = () => {
                         Forgot your password?
                       </Link>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {error && <div className="text-danger mt-3">{error}</div>}
               </Form>
