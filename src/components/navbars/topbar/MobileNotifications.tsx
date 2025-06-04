@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { ListGroup, Dropdown, Image } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { ListGroup, Dropdown, Image, Badge } from "react-bootstrap";
 import { NotificationList } from "./NotificationList";
 import { NotificationProps } from "types";
 import { useAuth } from "../../../AuthContext";
@@ -11,7 +11,25 @@ interface MobileNotificationProps {
 export const MobileNotifications: React.FC<MobileNotificationProps> = ({
   data,
 }) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/auth/sign-in");
+  };
+
+  // Function to get badge variant based on role
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role?.toLowerCase()) {
+      case 'admin':
+        return 'danger';
+      case 'user':
+        return 'secondary';
+      default:
+        return 'primary';
+    }
+  };
 
   return (
     <ListGroup
@@ -78,26 +96,24 @@ export const MobileNotifications: React.FC<MobileNotificationProps> = ({
             <div className="lh-1 ">
               <h5 className="mb-1"><b>{user?.username}</b></h5>
               <h6 className="mb-1">{user?.email}</h6>
-              <Link to="#" className="text-inherit fs-6">
-                View my profile
-              </Link>
+              <Badge
+                bg={getRoleBadgeVariant(user?.role || '')}
+                className="text-uppercase fw-bold px-2 py-1"
+                style={{ fontSize: '0.6rem', letterSpacing: '0.5px' }}
+              >
+                {user?.role}
+              </Badge>
             </div>
             <div className=" dropdown-divider mt-3 mb-2"></div>
           </Dropdown.Item>
           <Dropdown.Item eventKey="2">
             <i className="fe fe-user me-2"></i> Edit Profile
           </Dropdown.Item>
-          <Dropdown.Item eventKey="3">
-            <i className="fe fe-activity me-2"></i> Activity Log
-          </Dropdown.Item>
-          <Dropdown.Item className="text-primary">
-            <i className="fe fe-star me-2"></i> Go Pro
-          </Dropdown.Item>
           <Dropdown.Item>
             <i className="fe fe-settings me-2"></i> Account Settings
           </Dropdown.Item>
-          <Dropdown.Item>
-            <i className="fe fe-power me-2"></i>Sign Out
+          <Dropdown.Item onClick={handleSignOut}>
+            <i className="fe fe-power me-2 text-danger"></i><span className="text-danger">Sign Out</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

@@ -7,66 +7,63 @@ export const DashboardMenu: DashboardMenuProps[] = [
     title: "Tableau de bord",
     icon: "home",
     link: "/",
-    allowedRoles: ["ADMIN", "USER", "TOPOGRAPHE", "MANAGER"], // Available to all
+    allowedRoles: ["ADMIN", "USER"],
   },
   {
     id: uuid(),
     title: "TOPOGRAPHE",
     grouptitle: true,
-    allowedRoles: ["ADMIN", "TOPOGRAPHE"],
+    allowedRoles: ["USER"],
   },
   {
     id: uuid(),
     title: "Clients",
     icon: "briefcase",
     link: "/clients",
-    allowedRoles: ["ADMIN", "TOPOGRAPHE", "MANAGER"],
+    allowedRoles: ["USER"],
   },
   {
     id: uuid(),
     title: "Collaborateurs",
     icon: "users",
     link: "/collaborateurs",
-    allowedRoles: ["ADMIN", "TOPOGRAPHE", "MANAGER"],
+    allowedRoles: ["USER"],
   },
   {
     id: uuid(),
     title: "Projets",
     icon: "folder",
     link: "/projets",
-    allowedRoles: ["ADMIN", "TOPOGRAPHE", "USER", "MANAGER"],
+    allowedRoles: ["USER"],
   },
   {
     id: uuid(),
     title: "Administration",
     grouptitle: true,
-    allowedRoles: ["ADMIN"], // Only admins
+    allowedRoles: ["ADMIN"],
   },
   {
     id: uuid(),
     title: "Utilisateurs",
     icon: "users",
     link: "/users",
-    allowedRoles: ["ADMIN"], // Only admins
+    allowedRoles: ["ADMIN"],
   },
   {
     id: uuid(),
     title: "Documentation",
     grouptitle: true,
-    // No allowedRoles = show to everyone
   },
   {
     id: uuid(),
     title: "Docs",
     icon: "clipboard",
     link: "/documentation",
-    // No allowedRoles = show to everyone
   },
   {
     id: uuid(),
     title: "Changelog",
     icon: "git-pull-request",
     link: "/changelog",
-    // No allowedRoles = show to everyone
   },
 ];

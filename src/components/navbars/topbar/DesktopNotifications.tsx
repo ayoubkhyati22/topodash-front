@@ -1,4 +1,4 @@
-import { ListGroup, Dropdown, Image } from "react-bootstrap";
+import { ListGroup, Dropdown, Image, Badge } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationProps } from "types";
 import { NotificationList } from "./NotificationList";
@@ -17,6 +17,18 @@ export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
   const handleSignOut = () => {
     logout();
     navigate("/auth/sign-in");
+  };
+
+  // Function to get badge variant based on role
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role?.toLowerCase()) {
+      case 'admin':
+        return 'danger';
+      case 'user':
+        return 'secondary';
+      default:
+        return 'primary';
+    }
   };
 
   return (
@@ -62,6 +74,7 @@ export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
+
       <Dropdown as="li" className="ms-2">
         <Dropdown.Toggle
           as="a"
@@ -89,26 +102,24 @@ export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
                 <b>{user?.username}</b>
               </h5>
               <h6 className="mb-1">{user?.email}</h6>
-              <Link to="#" className="text-inherit fs-6">
-                View my profile
-              </Link>
+              <Badge
+                bg={getRoleBadgeVariant(user?.role || '')}
+                className="text-uppercase fw-bold px-2 py-1"
+                style={{ fontSize: '0.6rem', letterSpacing: '0.5px' }}
+              >
+                {user?.role}
+              </Badge>
             </div>
             <div className=" dropdown-divider mt-3 mb-2"></div>
           </Dropdown.Item>
           <Dropdown.Item eventKey="2">
             <i className="fe fe-user me-2"></i> Edit Profile
           </Dropdown.Item>
-          <Dropdown.Item eventKey="3">
-            <i className="fe fe-activity me-2"></i> Activity Log
-          </Dropdown.Item>
-          <Dropdown.Item className="text-primary">
-            <i className="fe fe-star me-2"></i> Go Pro
-          </Dropdown.Item>
           <Dropdown.Item>
             <i className="fe fe-settings me-2"></i> Account Settings
           </Dropdown.Item>
           <Dropdown.Item onClick={handleSignOut}>
-            <i className="fe fe-power me-2"></i>Sign Out
+            <i className="fe fe-power me-2 text-danger"></i><span className="text-danger">Sign Out</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

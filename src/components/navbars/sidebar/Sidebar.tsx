@@ -11,9 +11,10 @@ import { CustomToggleLevelTwo } from "./CustomToggleLevelTwo";
 // import simple bar scrolling used for notification item scrolling
 import SimpleBar from "simplebar-react";
 
-// import routes file
-import { DashboardMenu } from "routes/DashboardRoutes";
+// import routes file - CHANGE THIS LINE
+import { DashboardMenu } from "../../../routes/DashboardRoutes";
 import { DashboardMenuProps } from "types";
+import { useAuth } from "../../../AuthContext"; // Add this import
 
 interface SidebarProps {
   showMenu: boolean;
@@ -22,6 +23,17 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ showMenu, toggleMenu }) => {
   const location = useLocation();
+  const { user } = useAuth(); // Add this line
+
+  // Filter menu items based on user role - ADD THIS
+  const filteredMenu = DashboardMenu.filter(item => {
+    // If no roles specified, show to everyone
+    if (!item.allowedRoles) return true;
+    
+    // Check if user's role is in allowed roles
+    return item.allowedRoles.includes(user?.role || "");
+  });
+
   const generateLink = (item: any) => {
     const location = useLocation();
 
@@ -58,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ showMenu, toggleMenu }) => {
           as="ul"
           className="navbar-nav flex-column"
         >
-          {DashboardMenu.map(function (
+          {filteredMenu.map(function ( // CHANGE THIS FROM DashboardMenu TO filteredMenu
             menu: DashboardMenuProps,
             index: number
           ) {
