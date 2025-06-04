@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ListGroup, Dropdown, Image } from "react-bootstrap";
 import { NotificationList } from "./NotificationList";
 import { NotificationProps } from "types";
+import { useAuth } from "../../../AuthContext";
 
 interface MobileNotificationProps {
   data: NotificationProps[];
@@ -10,6 +11,8 @@ interface MobileNotificationProps {
 export const MobileNotifications: React.FC<MobileNotificationProps> = ({
   data,
 }) => {
+  const { user } = useAuth();
+
   return (
     <ListGroup
       as="ul"
@@ -73,7 +76,8 @@ export const MobileNotifications: React.FC<MobileNotificationProps> = ({
         >
           <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=" ">
             <div className="lh-1 ">
-              <h5 className="mb-1"> John E. Grainger</h5>
+              <h5 className="mb-1"><b>{user?.username}</b></h5>
+              <h6 className="mb-1">{user?.email}</h6>
               <Link to="#" className="text-inherit fs-6">
                 View my profile
               </Link>

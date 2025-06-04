@@ -1,5 +1,5 @@
 //import node module libraries
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
@@ -14,7 +14,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const hasMounted = useMounted();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,8 +25,13 @@ const SignIn = () => {
         username,
         password,
       });
+      
+      console.log("Login response:", res.data); // Debug log
+      
       if (res.data && res.data.data && res.data.data.token) {
-        login(res.data.data);
+        const userData = res.data.data;
+        console.log("About to login with:", userData); // Debug log
+        login(userData);     
         navigate("/");
       } else {
         setError("Invalid response from server");
@@ -35,6 +40,10 @@ const SignIn = () => {
       setError(err.response?.data?.message || "Login failed");
     }
   };
+
+  useEffect(() => {
+    console.log("Current user:", user);
+  }, [user]);
 
   return (
     <Row className="align-items-center justify-content-center g-0 min-vh-100">

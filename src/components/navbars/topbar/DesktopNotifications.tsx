@@ -1,7 +1,8 @@
 import { ListGroup, Dropdown, Image } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NotificationProps } from "types";
 import { NotificationList } from "./NotificationList";
+import { useAuth } from "../../../AuthContext";
 
 interface DesktopNotificationProps {
   data: NotificationProps[];
@@ -10,6 +11,14 @@ interface DesktopNotificationProps {
 export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
   data,
 }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/auth/sign-in");
+  };
+
   return (
     <ListGroup
       as="ul"
@@ -76,7 +85,10 @@ export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
         >
           <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=" ">
             <div className="lh-1 ">
-              <h5 className="mb-1"> John E. Grainger</h5>
+              <h5 className="mb-1">
+                <b>{user?.username}</b>
+              </h5>
+              <h6 className="mb-1">{user?.email}</h6>
               <Link to="#" className="text-inherit fs-6">
                 View my profile
               </Link>
@@ -95,7 +107,7 @@ export const DesktopNotifications: React.FC<DesktopNotificationProps> = ({
           <Dropdown.Item>
             <i className="fe fe-settings me-2"></i> Account Settings
           </Dropdown.Item>
-          <Dropdown.Item>
+          <Dropdown.Item onClick={handleSignOut}>
             <i className="fe fe-power me-2"></i>Sign Out
           </Dropdown.Item>
         </Dropdown.Menu>
