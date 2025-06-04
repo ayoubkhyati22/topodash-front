@@ -15,6 +15,7 @@ import Client from "pages/dashboard/user/Client";
 import Collaborateur from "pages/dashboard/user/Collaborateur";
 import Projet from "pages/dashboard/user/Projet";
 import User from "pages/dashboard/admin/users/User";
+import Country from "pages/dashboard/admin/referentiel/coutries/Country";
 
 const App = () => {
   const router = createBrowserRouter([
