@@ -19,6 +19,15 @@ const User: React.FC = () => {
       case 'delete':
         // Show delete confirmation
         break;
+      case 'call':
+        // Show call confirmation
+        break;
+      case 'sendMail':
+        // Show send mail confirmation
+        break;
+      case 'sendSms':
+        // Show send sms confirmation
+        break;
     }
   };
 
