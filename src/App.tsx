@@ -14,7 +14,7 @@ import ChangeLog from "pages/dashboard/Changelog";
 import Client from "pages/dashboard/user/Client";
 import Collaborateur from "pages/dashboard/user/Collaborateur";
 import Projet from "pages/dashboard/user/Projet";
-import User from "pages/dashboard/admin/User";
+import User from "pages/dashboard/admin/users/User";
 
 const App = () => {
   const router = createBrowserRouter([
