@@ -65,8 +65,8 @@ const UserActions: React.FC<UserActionsProps> = ({ userId, username, userEmail, 
 
   return (
     <Dropdown>
-      <Dropdown.Toggle as={CustomToggle}>
-        <MoreVertical size="15px" className="text-muted" />
+      <Dropdown.Toggle variant="light" className="btn-sm">
+        Actions
       </Dropdown.Toggle>
       <Dropdown.Menu align="end" className="dropdown-menu-lg">
         {/* User Header */}

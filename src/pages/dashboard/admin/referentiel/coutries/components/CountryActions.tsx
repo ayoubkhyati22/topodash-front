@@ -44,8 +44,8 @@ const CountryActions: React.FC<CountryActionsProps> = ({ countryId, countryName,
 
   return (
     <Dropdown>
-      <Dropdown.Toggle as={CustomToggle}>
-        <MoreVertical size="15px" className="text-muted" />
+      <Dropdown.Toggle variant="light" className="btn-sm">
+        Actions
       </Dropdown.Toggle>
       <Dropdown.Menu align="end" className="dropdown-menu-lg">
         {/* Country Header */}
@@ -71,9 +71,6 @@ const CountryActions: React.FC<CountryActionsProps> = ({ countryId, countryName,
         </div>
 
         {/* Action Items */}
-        <Dropdown.Item onClick={() => handleAction('view')}>
-          <Eye size="15px" className="me-2" /> Voir
-        </Dropdown.Item>
         <Dropdown.Item onClick={() => handleAction('edit')}>
           <Edit size="15px" className="me-2" /> Modifier
         </Dropdown.Item>
