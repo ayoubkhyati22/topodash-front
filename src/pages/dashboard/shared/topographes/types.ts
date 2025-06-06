@@ -64,3 +64,13 @@ export interface Topographe {
       name: string;
     };
   }
+
+  export interface TopographeUpdateRequest {
+    email: string;
+    phoneNumber: string;
+    firstName: string;
+    lastName: string;
+    birthday: string; // Format: YYYY-MM-DD
+    cityId: number;
+    specialization: string;
+  }

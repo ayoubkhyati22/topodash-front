@@ -1,13 +1,14 @@
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
-import { Eye, Mail, MessageCircle, Phone, Trash, User } from 'react-feather';
+import { Eye, Mail, MessageCircle, Phone, Trash, User, ToggleLeft, ToggleRight } from 'react-feather';
 import { Link } from 'react-router-dom';
 
 interface UserActionsProps {
   userId: number;
   username: string;
   userEmail: string;
+  isActive: boolean;
   onAction?: (action: string, userId: number) => void;
 }
 
@@ -29,7 +30,13 @@ const CustomToggle = React.forwardRef<HTMLAnchorElement, any>(
 
 CustomToggle.displayName = "CustomToggle";
 
-const TopographeActions: React.FC<UserActionsProps> = ({ userId, username, userEmail, onAction }) => {
+const TopographeActions: React.FC<UserActionsProps> = ({ 
+  userId, 
+  username, 
+  userEmail, 
+  isActive, 
+  onAction 
+}) => {
   const handleAction = (action: string) => {
     onAction?.(action, userId);
   };
@@ -65,9 +72,10 @@ const TopographeActions: React.FC<UserActionsProps> = ({ userId, username, userE
 
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="light" className="btn-sm">
-        Actions
+      <Dropdown.Toggle as={CustomToggle}>
+        <span className="btn btn-light btn-sm">Actions</span>
       </Dropdown.Toggle>
+      
       <Dropdown.Menu align="end" className="dropdown-menu-lg">
         {/* User Header */}
         <div className="px-3 py-2 border-bottom">
@@ -88,24 +96,46 @@ const TopographeActions: React.FC<UserActionsProps> = ({ userId, username, userE
             <div>
               <h6 className="mb-0 text-dark">{username}</h6>
               <small className="text-muted">Email: {userEmail}</small>
+              <div>
+                {isActive ? (
+                  <span className="badge bg-success">Actif</span>
+                ) : (
+                  <span className="badge bg-danger">Inactif</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Action Items */}
+        {/* Primary Actions */}
         <Dropdown.Item onClick={() => handleAction('view')}>
-          <Eye size="15px" className="me-2" /> Voir
+          <Eye size="15px" className="me-2" /> Voir détails
         </Dropdown.Item>
         <Dropdown.Item onClick={() => handleAction('edit')}>
           <Pencil size="15px" className="me-2" /> Modifier
         </Dropdown.Item>
+        
+        {/* Status Actions */}
+        <Dropdown.Divider />
+        {isActive ? (
+          <Dropdown.Item onClick={() => handleAction('deactivate')}>
+            <ToggleLeft size="15px" className="me-2 text-warning" />
+            <span className="text-warning">Désactiver</span>
+          </Dropdown.Item>
+        ) : (
+          <Dropdown.Item onClick={() => handleAction('activate')}>
+            <ToggleRight size="15px" className="me-2 text-success" />
+            <span className="text-success">Activer</span>
+          </Dropdown.Item>
+        )}
+        
         <Dropdown.Item onClick={() => handleAction('delete')}>
           <Trash size="15px" className="me-2 text-danger" /> 
           <span className="text-danger">Supprimer</span>
         </Dropdown.Item>
         
+        {/* Communication Actions */}
         <Dropdown.Divider />
-        
         <Dropdown.Item onClick={() => handleAction('call')}>
           <Phone size="15px" className="me-2" /> Appeler
         </Dropdown.Item>
