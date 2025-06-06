@@ -1,14 +1,7 @@
 // hooks/useUsers.ts
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from 'AuthContext';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
-}
+import { User } from '../types';
 
 interface PaginationData {
   pageNumber: number;
@@ -28,7 +21,7 @@ interface UseUsersResult {
 
 const API_BASE_URL = 'http://localhost:8080';
 
-export const useUsers = (initialPageSize = 8): UseUsersResult => {
+export const useUsers = (initialPageSize = 5): UseUsersResult => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -51,6 +51,13 @@ export const DashboardMenu: DashboardMenuProps[] = [
   },
   {
     id: uuid(),
+    title: "Topographes",
+    icon: "users",
+    link: "/topographes",
+    allowedRoles: ["ADMIN"],
+  },
+  {
+    id: uuid(),
     title: "Réferentiel",
     grouptitle: true,
     allowedRoles: ["ADMIN"],

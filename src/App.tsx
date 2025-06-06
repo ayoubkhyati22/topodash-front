@@ -16,6 +16,7 @@ import Collaborateur from "pages/dashboard/user/Collaborateur";
 import Projet from "pages/dashboard/user/Projet";
 import User from "pages/dashboard/admin/users/User";
 import Country from "pages/dashboard/admin/referentiel/coutries/Country";
+import Topographe from "pages/dashboard/shared/topographes/Topographe";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -49,6 +50,11 @@ const App = () => {
           id: "user",
           path: "/users",
           Component: User,
+        },
+        {
+          id: "topographe",
+          path: "/topographes",
+          Component: Topographe,
         },
         {
           id: "country",

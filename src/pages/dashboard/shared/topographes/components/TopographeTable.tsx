@@ -1,9 +1,8 @@
-// components/UserTable.tsx
 import React from 'react';
-import { Table, Card, Pagination, Spinner, Alert } from 'react-bootstrap';
+import { Table, Card, Pagination, Spinner, Alert, Badge } from 'react-bootstrap';
 import { User as UserIcon } from 'react-feather';
-import UserActions from './UserActions';
-import { User } from '../types';
+import TopographeActions from './TopographeActions';
+import { Topographe } from '../types';
 
 interface PaginationData {
   pageNumber: number;
@@ -12,8 +11,8 @@ interface PaginationData {
   totalPages: number;
 }
 
-interface UserTableProps {
-  users: User[];
+interface TopographeTableProps {
+  users: Topographe[];
   pagination: PaginationData;
   loading: boolean;
   error: string | null;
@@ -22,20 +21,19 @@ interface UserTableProps {
   onUserAction?: (action: string, userId: number) => void;
 }
 
-const getRoleBadgeClass = (role: string): string => {
-  const roleClasses = {
-    ADMIN: 'badge bg-danger',
-    TOPOGRAPHE: 'badge bg-primary',
-    CLIENT: 'badge bg-warning',
-  };
-  return roleClasses[role as keyof typeof roleClasses] || 'badge bg-secondary';
+const getStatusBadge = (isActive: boolean) => {
+  return isActive ? (
+    <Badge bg="success">Actif</Badge>
+  ) : (
+    <Badge bg="danger">Inactif</Badge>
+  );
 };
 
 const EmptyState: React.FC = () => (
   <Card.Body className="text-center py-5">
     <UserIcon size="48px" className="text-muted mb-3" />
-    <h5>Aucun utilisateur trouvé</h5>
-    <p className="text-muted">Il n'y a pas d'utilisateurs à afficher pour le moment.</p>
+    <h5>Aucun topographe trouvé</h5>
+    <p className="text-muted">Il n'y a pas de topographes à afficher pour le moment.</p>
   </Card.Body>
 );
 
@@ -44,7 +42,7 @@ const LoadingState: React.FC = () => (
     <Spinner animation="border" role="status">
       <span className="visually-hidden">Chargement...</span>
     </Spinner>
-    <p className="mt-2">Chargement des utilisateurs...</p>
+    <p className="mt-2">Chargement des topographes...</p>
   </Card.Body>
 );
 
@@ -104,7 +102,7 @@ const PaginationComponent: React.FC<{
   return <Pagination className="justify-content-center mt-3">{items}</Pagination>;
 };
 
-export const UserTable: React.FC<UserTableProps> = ({
+export const TopographeTable: React.FC<TopographeTableProps> = ({
   users,
   pagination,
   loading,
@@ -117,7 +115,7 @@ export const UserTable: React.FC<UserTableProps> = ({
     return (
       <Card className="h-100">
         <Card.Header className="bg-white py-4">
-          <h4 className="mb-0">Liste des utilisateurs</h4>
+          <h4 className="mb-0">Liste des topographes</h4>
         </Card.Header>
         <ErrorState error={error} onRetry={onRetry} />
       </Card>
@@ -127,9 +125,9 @@ export const UserTable: React.FC<UserTableProps> = ({
   return (
     <Card className="h-100">
       <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Liste des utilisateurs</h4>
+        <h4 className="mb-0">Liste des topographes</h4>
         <small className="text-muted">
-          {pagination.totalElements} utilisateur{pagination.totalElements !== 1 ? 's' : ''} au total
+          {pagination.totalElements} topographe{pagination.totalElements !== 1 ? 's' : ''} au total
         </small>
       </Card.Header>
 
@@ -143,12 +141,12 @@ export const UserTable: React.FC<UserTableProps> = ({
             <thead className="table-light">
               <tr>
                 <th>Nom</th>
-                <th>Nom d'utilisateur</th>
-                <th>CIN</th>
-                <th>Date de naissance</th>
-                <th>Rôle</th>
-                <th>Téléphone</th>
-                <th></th>
+                <th>Licence</th>
+                <th>Spécialisation</th>
+                <th>Ville</th>
+                <th>Statut</th>
+                <th>Statistiques</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -162,26 +160,38 @@ export const UserTable: React.FC<UserTableProps> = ({
                       <div className="ms-3 lh-1">
                         <h5 className="mb-1">{user.firstName} {user.lastName}</h5>
                         <p className="mb-0 text-muted">{user.email}</p>
+                        <small className="text-muted">{user.phoneNumber}</small>
                       </div>
                     </div>
                   </td>
                   <td className="align-middle">
-                    {user.username}
+                    <strong>{user.licenseNumber}</strong>
+                    <br />
+                    <small className="text-muted">#{user.username}</small>
                   </td>
                   <td className="align-middle">
-                    {user.cin}
+                    <span className="fw-medium">{user.specialization}</span>
                   </td>
                   <td className="align-middle">
-                    {user.birthday}
+                    {user.cityName}
                   </td>
                   <td className="align-middle">
-                    <span className={getRoleBadgeClass(user.role)}>
-                      {user.role}
-                    </span>
+                    {getStatusBadge(user.isActive)}
                   </td>
-                  <td className="align-middle">{user.phoneNumber}</td>
                   <td className="align-middle">
-                    <UserActions userId={user.id} username={user.username} userEmail={user.email} onAction={onUserAction} />
+                    <div className="d-flex gap-2">
+                      <small className="badge bg-info">{user.totalClients} clients</small>
+                      <small className="badge bg-warning">{user.totalTechniciens} techniciens</small>
+                      <small className="badge bg-success">{user.totalProjects} projets</small>
+                    </div>
+                  </td>
+                  <td className="align-middle">
+                    <TopographeActions 
+                      userId={user.id} 
+                      username={`${user.firstName} ${user.lastName}`}
+                      userEmail={user.email} 
+                      onAction={onUserAction} 
+                    />
                   </td>
                 </tr>
               ))}
