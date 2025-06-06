@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { TopographeCreateRequest, ApiResponse, Topographe, City } from '../types';
+import { TopographeCreateRequest, ApiResponse, City } from '../types';
 import { useAuth } from '../../../../../AuthContext';
 
 interface UseTopographeFormReturn {
@@ -72,7 +72,6 @@ export const useTopographeForm = (): UseTopographeFormReturn => {
         throw new Error(errorResult.message || `Erreur HTTP: ${response.status}`);
       }
 
-      const result: ApiResponse<Topographe> = await response.json();
       setSuccess(true);
       return true;
     } catch (err) {

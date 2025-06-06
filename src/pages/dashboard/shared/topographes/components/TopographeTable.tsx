@@ -23,7 +23,7 @@ interface TopographeTableProps {
 
 const getStatusBadge = (isActive: boolean) => {
   return isActive ? (
-    <Badge bg="success">Actif</Badge>
+    <Badge bg="success">• Actif</Badge>
   ) : (
     <Badge bg="danger">Inactif</Badge>
   );
@@ -182,7 +182,7 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                     <div className="d-flex gap-2">
                       <small className="badge bg-info">{user.totalClients} clients</small>
                       <small className="badge bg-warning">{user.totalTechniciens} techniciens</small>
-                      <small className="badge bg-success">{user.totalProjects} projets</small>
+                      <small className="badge bg-secondary">{user.totalProjects} projets</small>
                     </div>
                   </td>
                   <td className="align-middle">
