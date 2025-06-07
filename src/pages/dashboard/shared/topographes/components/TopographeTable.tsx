@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Card, Pagination, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { User as UserIcon, Phone, MapPin, Award, Users, Briefcase, User } from 'react-feather';
+import { User as UserIcon, Phone, MapPin, Award, Users, Briefcase, User, CheckCircle, BarChart2, MoreHorizontal, BookOpen } from 'react-feather';
 import TopographeActions from './TopographeActions';
 import { Topographe } from '../types';
 
@@ -23,9 +23,9 @@ interface TopographeTableProps {
 
 const getStatusBadge = (isActive: boolean) => {
   return isActive ? (
-    <small style={{backgroundColor: '#28a745', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Actif</small>
+    <small style={{ backgroundColor: '#28a745', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Actif</small>
   ) : (
-    <small style={{backgroundColor: 'red', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Inactif</small>
+    <small style={{ backgroundColor: 'red', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Inactif</small>
   );
 };
 
@@ -35,12 +35,12 @@ const getAvatarColor = (name: string): string => {
     '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
     '#10AC84', '#EE5A24', '#0984E3', '#6C5CE7', '#A29BFE'
   ];
-  
+
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   return colors[Math.abs(hash) % colors.length];
 };
 
@@ -54,12 +54,12 @@ const getInitials = (name: string): string => {
 };
 
 // Composant pour afficher la spécialisation avec tooltip
-const SpecializationCell: React.FC<{ specialization: string; userId: number }> = ({ 
-  specialization, 
-  userId 
+const SpecializationCell: React.FC<{ specialization: string; userId: number }> = ({
+  specialization,
+  userId
 }) => {
   const isLong = specialization.length > 50;
-  
+
   if (isLong) {
     return (
       <OverlayTrigger
@@ -70,7 +70,7 @@ const SpecializationCell: React.FC<{ specialization: string; userId: number }> =
           </Tooltip>
         }
       >
-        <span style={{ 
+        <span style={{
           fontWeight: '500',
           display: '-webkit-box',
           WebkitLineClamp: 2,
@@ -84,9 +84,9 @@ const SpecializationCell: React.FC<{ specialization: string; userId: number }> =
       </OverlayTrigger>
     );
   }
-  
+
   return (
-    <span style={{ 
+    <span style={{
       fontWeight: '500',
       lineHeight: '1.4'
     }}>
@@ -123,8 +123,8 @@ const TopographeMobileCard: React.FC<{
       <Card.Body style={{ padding: '1rem' }}>
         {/* Header avec avatar et nom */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-          <div 
-            style={{ 
+          <div
+            style={{
               backgroundColor: avatarColor,
               width: '50px',
               height: '50px',
@@ -172,20 +172,20 @@ const TopographeMobileCard: React.FC<{
 
         {/* Bouton Actions sous le téléphone */}
         <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-          <TopographeActions 
-            userId={user.id} 
+          <TopographeActions
+            userId={user.id}
             username={`${user.firstName} ${user.lastName}`}
             userEmail={user.email}
             isActive={user.isActive}
-            onAction={onUserAction} 
+            onAction={onUserAction}
           />
         </div>
 
         {/* Spécialisation avec retour à la ligne */}
         <div style={{ marginBottom: '1rem' }}>
           <small style={{ color: '#6c757d' }}>Spécialisation:</small>
-          <p style={{ 
-            marginBottom: 0, 
+          <p style={{
+            marginBottom: 0,
             fontWeight: '500',
             whiteSpace: 'normal',
             wordWrap: 'break-word',
@@ -197,9 +197,9 @@ const TopographeMobileCard: React.FC<{
 
         {/* Statistiques */}
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ 
-            ...badgeStyle, 
-            backgroundColor: '#17a2b8', 
+          <span style={{
+            ...badgeStyle,
+            backgroundColor: '#17a2b8',
             color: 'white',
             display: 'flex',
             alignItems: 'center',
@@ -208,9 +208,9 @@ const TopographeMobileCard: React.FC<{
             <Users size="12px" style={{ marginRight: '0.25rem' }} />
             {user.totalClients} clients
           </span>
-          <span style={{ 
-            ...badgeStyle, 
-            backgroundColor: '#ffc107', 
+          <span style={{
+            ...badgeStyle,
+            backgroundColor: '#ffc107',
             color: '#212529',
             display: 'flex',
             alignItems: 'center',
@@ -219,9 +219,9 @@ const TopographeMobileCard: React.FC<{
             <Users size="12px" style={{ marginRight: '0.25rem' }} />
             {user.totalTechniciens} techniciens
           </span>
-          <span style={{ 
-            ...badgeStyle, 
-            backgroundColor: 'grey', 
+          <span style={{
+            ...badgeStyle,
+            backgroundColor: 'grey',
             color: 'white',
             display: 'flex',
             alignItems: 'center',
@@ -369,8 +369,8 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
 
   return (
     <Card style={{ height: '100%' }}>
-      <Card.Header style={{ 
-        backgroundColor: 'white', 
+      <Card.Header style={{
+        backgroundColor: 'white',
         padding: '1rem',
         display: 'flex',
         justifyContent: 'space-between',
@@ -409,13 +409,13 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                 </colgroup>
                 <thead className="table-light">
                   <tr>
-                    <th>Nom</th>
-                    <th>Licence</th>
-                    <th>Spécialisation</th>
-                    <th>Ville</th>
-                    <th>Statut</th>
-                    <th>Statistiques</th>
-                    <th>Actions</th>
+                    <th><User size="14px" style={{ marginRight: '0.5rem' }} />Nom</th>
+                    <th><Award size="14px" style={{ marginRight: '0.5rem' }} />Licence</th>
+                    <th><BookOpen size="14px" style={{ marginRight: '0.5rem' }} />Spécialisation</th>
+                    <th><MapPin size="14px" style={{ marginRight: '0.5rem' }} />Ville</th>
+                    <th><CheckCircle size="14px" style={{ marginRight: '0.5rem' }} />Statut</th>
+                    <th><BarChart2 size="14px" style={{ marginRight: '0.5rem' }} />Statistiques</th>
+                    <th><MoreHorizontal size="14px" style={{ marginRight: '0.5rem' }} />Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -447,16 +447,17 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                         <br />
                         <small style={{ color: '#6c757d' }}>#{user.username}</small>
                       </td>
-                      <td style={{ 
+                      <td style={{
+                        fontWeight: '300',
                         verticalAlign: 'middle',
                         maxWidth: '200px',
                         whiteSpace: 'normal',
                         wordWrap: 'break-word',
                         padding: '0.75rem 0.5rem'
                       }}>
-                        <SpecializationCell 
-                          specialization={user.specialization} 
-                          userId={user.id} 
+                        <SpecializationCell
+                          specialization={user.specialization}
+                          userId={user.id}
                         />
                       </td>
                       <td style={{ verticalAlign: 'middle' }}>
@@ -468,23 +469,23 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                       <td style={{ verticalAlign: 'middle' }}>
                         <div style={badgeContainerStyle}>
                           <small style={{ ...badgeStyle, backgroundColor: '#17a2b8', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
-                          <User size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalClients} clients
+                            <User size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalClients} clients
                           </small>
                           <small style={{ ...badgeStyle, backgroundColor: '#ffc107', color: '#212529', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
-                          <Users size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalTechniciens} techniciens
+                            <Users size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalTechniciens} techniciens
                           </small>
                           <small style={{ ...badgeStyle, backgroundColor: 'grey', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
-                          <Briefcase size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalProjects} projets
+                            <Briefcase size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalProjects} projets
                           </small>
                         </div>
                       </td>
                       <td style={{ verticalAlign: 'middle', position: 'relative' }}>
-                        <TopographeActions 
-                          userId={user.id} 
+                        <TopographeActions
+                          userId={user.id}
                           username={`${user.firstName} ${user.lastName}`}
                           userEmail={user.email}
                           isActive={user.isActive}
-                          onAction={onUserAction} 
+                          onAction={onUserAction}
                         />
                       </td>
                     </tr>
