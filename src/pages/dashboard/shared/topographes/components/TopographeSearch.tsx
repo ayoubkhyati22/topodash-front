@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { Search, X } from 'react-feather';
+import { BookOpen, CheckCircle, MapPin, Search, X } from 'react-feather';
 import { SearchFilters } from '../types';
 
 interface TopographeSearchProps {
@@ -10,9 +10,9 @@ interface TopographeSearchProps {
   onError?: (error: string) => void;
 }
 
-const TopographeSearch: React.FC<TopographeSearchProps> = ({ 
-  onSearch, 
-  onClear, 
+const TopographeSearch: React.FC<TopographeSearchProps> = ({
+  onSearch,
+  onClear,
   loading = false,
   onError
 }) => {
@@ -31,7 +31,7 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // Nettoyer les filtres vides
       const cleanFilters: SearchFilters = {};
@@ -44,7 +44,7 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
       if (filters.isActive !== undefined) {
         cleanFilters.isActive = filters.isActive;
       }
-      
+
       onSearch(cleanFilters);
     } catch (error) {
       onError?.('Erreur lors de la recherche');
@@ -60,7 +60,7 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
     onClear();
   };
 
-  const hasFilters = Object.values(filters).some(value => 
+  const hasFilters = Object.values(filters).some(value =>
     value !== undefined && value !== '' && value !== null
   );
 
@@ -77,7 +77,8 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
           <Row>
             <Col md={3}>
               <Form.Group className="mb-3">
-                <Form.Label>Spécialisation</Form.Label>
+                <Form.Label><BookOpen size="14px" style={{ marginRight: '0.5rem' }} />Spécialisation
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Ex: Génie Civil, SIG..."
@@ -89,7 +90,7 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
             </Col>
             <Col md={3}>
               <Form.Group className="mb-3">
-                <Form.Label>Ville</Form.Label>
+                <Form.Label><MapPin size="14px" style={{ marginRight: '0.5rem' }} />Ville</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Ex: Casablanca, Rabat..."
@@ -101,7 +102,7 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
             </Col>
             <Col md={3}>
               <Form.Group className="mb-3">
-                <Form.Label>Statut</Form.Label>
+                <Form.Label><CheckCircle size="14px" style={{ marginRight: '0.5rem' }} />Statut</Form.Label>
                 <Form.Select
                   value={filters.isActive === undefined ? '' : filters.isActive.toString()}
                   onChange={(e) => {
@@ -120,8 +121,8 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
               <Form.Group className="mb-3">
                 <Form.Label>&nbsp;</Form.Label>
                 <div className="d-flex gap-2">
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     variant="primary"
                     disabled={loading}
                     className="flex-grow-1"
@@ -138,10 +139,10 @@ const TopographeSearch: React.FC<TopographeSearchProps> = ({
                       </>
                     )}
                   </Button>
-                  
+
                   {hasFilters && (
-                    <Button 
-                      type="button" 
+                    <Button
+                      type="button"
                       variant="outline-secondary"
                       onClick={handleClear}
                       disabled={loading}
