@@ -295,15 +295,6 @@ const Topographe: React.FC = () => {
         />
       )}
 
-      {/* Debug info in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="position-fixed bottom-0 start-0 bg-dark text-white p-2 small" style={{ zIndex: 1000 }}>
-          <div>Selected: {selectedTopographe?.id || 'none'}</div>
-          <div>Status Modal: {showStatusModal ? 'open' : 'closed'}</div>
-          <div>Action: {statusAction}</div>
-        </div>
-      )}
-
       {/* Notifications Toast */}
       <ToastContainer position="top-end" className="p-3">
         <Toast 
