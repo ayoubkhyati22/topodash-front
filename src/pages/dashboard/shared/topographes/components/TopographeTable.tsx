@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Card, Pagination, Spinner, Alert, Badge } from 'react-bootstrap';
-import { User as UserIcon } from 'react-feather';
+import { User as UserIcon, Phone, Mail, MapPin, Award, Users, Briefcase, User } from 'react-feather';
 import TopographeActions from './TopographeActions';
 import { Topographe } from '../types';
 
@@ -23,39 +23,194 @@ interface TopographeTableProps {
 
 const getStatusBadge = (isActive: boolean) => {
   return isActive ? (
-    <Badge bg="success">Actif</Badge>
+    <small style={{backgroundColor: '#28a745', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Actif</small>
   ) : (
-    <Badge bg="danger">Inactif</Badge>
+    <small style={{backgroundColor: 'red', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>• Inactif</small>
+  );
+};
+
+const getAvatarColor = (name: string): string => {
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
+    '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
+    '#10AC84', '#EE5A24', '#0984E3', '#6C5CE7', '#A29BFE'
+  ];
+  
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+};
+
+const getInitials = (name: string): string => {
+  return name
+    .split(' ')
+    .map(word => word.charAt(0))
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
+};
+
+// Composant Card pour mobile
+const TopographeMobileCard: React.FC<{
+  user: Topographe;
+  onUserAction?: (action: string, userId: number) => void;
+}> = ({ user, onUserAction }) => {
+  const avatarColor = getAvatarColor(`${user.firstName} ${user.lastName}`);
+  const initials = getInitials(`${user.firstName} ${user.lastName}`);
+
+  const cardStyle: React.CSSProperties = {
+    marginBottom: '1rem',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.2s ease-in-out',
+    border: '1px solid #dee2e6'
+  };
+
+  const badgeStyle: React.CSSProperties = {
+    fontSize: '0.75rem',
+    padding: '0.25rem 0.5rem',
+    fontWeight: '500',
+    letterSpacing: '0.025em'
+  };
+
+  return (
+    <Card style={cardStyle} className="mb-3">
+      <Card.Body style={{ padding: '1rem' }}>
+        {/* Header avec avatar et nom */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+          <div 
+            style={{ 
+              backgroundColor: avatarColor,
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '1rem',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: 'white'
+            }}
+          >
+            {initials}
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            <h6 style={{ marginBottom: '0.25rem', fontWeight: 'bold' }}>
+              {user.firstName} {user.lastName}
+            </h6>
+            <p style={{ marginBottom: '0.25rem', color: '#6c757d', fontSize: '0.875rem' }}>
+              {user.email}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {getStatusBadge(user.isActive)}
+              <small style={{ color: '#6c757d' }}>#{user.username}</small>
+            </div>
+          </div>
+        </div>
+
+        {/* Informations détaillées */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem' }}>
+            <Award size="14px" style={{ marginRight: '0.5rem' }} />
+            <span>{user.licenseNumber}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem' }}>
+            <Phone size="14px" style={{ marginRight: '0.5rem' }} />
+            <span>{user.phoneNumber}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem', gridColumn: '1 / -1' }}>
+            <MapPin size="14px" style={{ marginRight: '0.5rem' }} />
+            <span>{user.cityName}</span>
+          </div>
+        </div>
+
+        {/* Bouton Actions sous le téléphone */}
+        <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <TopographeActions 
+            userId={user.id} 
+            username={`${user.firstName} ${user.lastName}`}
+            userEmail={user.email}
+            isActive={user.isActive}
+            onAction={onUserAction} 
+          />
+        </div>
+
+        {/* Spécialisation */}
+        <div style={{ marginBottom: '1rem' }}>
+          <small style={{ color: '#6c757d' }}>Spécialisation:</small>
+          <p style={{ marginBottom: 0, fontWeight: '500' }}>{user.specialization}</p>
+        </div>
+
+        {/* Statistiques */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ 
+            ...badgeStyle, 
+            backgroundColor: '#17a2b8', 
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: '0.25rem'
+          }}>
+            <Users size="12px" style={{ marginRight: '0.25rem' }} />
+            {user.totalClients} clients
+          </span>
+          <span style={{ 
+            ...badgeStyle, 
+            backgroundColor: '#ffc107', 
+            color: '#212529',
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: '0.25rem'
+          }}>
+            <Users size="12px" style={{ marginRight: '0.25rem' }} />
+            {user.totalTechniciens} techniciens
+          </span>
+          <span style={{ 
+            ...badgeStyle, 
+            backgroundColor: 'grey', 
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: '0.25rem'
+          }}>
+            <Briefcase size="12px" style={{ marginRight: '0.25rem' }} />
+            {user.totalProjects} projets
+          </span>
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 
 const EmptyState: React.FC = () => (
-  <Card.Body className="text-center py-5">
-    <UserIcon size="48px" className="text-muted mb-3" />
+  <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+    <UserIcon size="48px" style={{ color: '#6c757d', marginBottom: '1rem' }} />
     <h5>Aucun topographe trouvé</h5>
-    <p className="text-muted">Il n'y a pas de topographes à afficher pour le moment.</p>
-  </Card.Body>
+    <p style={{ color: '#6c757d' }}>Il n'y a pas de topographes à afficher pour le moment.</p>
+  </div>
 );
 
 const LoadingState: React.FC = () => (
-  <Card.Body className="text-center py-5">
+  <div style={{ textAlign: 'center', padding: '3rem 0' }}>
     <Spinner animation="border" role="status">
       <span className="visually-hidden">Chargement...</span>
     </Spinner>
-    <p className="mt-2">Chargement des topographes...</p>
-  </Card.Body>
+    <p style={{ marginTop: '1rem' }}>Chargement des topographes...</p>
+  </div>
 );
 
 const ErrorState: React.FC<{ error: string; onRetry: () => void }> = ({ error, onRetry }) => (
-  <Card.Body>
-    <Alert variant="danger">
-      <Alert.Heading>Erreur</Alert.Heading>
-      <p>{error}</p>
-      <button className="btn btn-outline-danger" onClick={onRetry}>
-        Réessayer
-      </button>
-    </Alert>
-  </Card.Body>
+  <Alert variant="danger">
+    <Alert.Heading>Erreur</Alert.Heading>
+    <p>{error}</p>
+    <button className="btn btn-outline-danger" onClick={onRetry}>
+      Réessayer
+    </button>
+  </Alert>
 );
 
 const PaginationComponent: React.FC<{
@@ -99,7 +254,22 @@ const PaginationComponent: React.FC<{
     />
   );
 
-  return <Pagination className="justify-content-center mt-3">{items}</Pagination>;
+  const containerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '0.5rem'
+  };
+
+  return (
+    <div style={containerStyle}>
+      <Pagination style={{ marginBottom: 0 }}>{items}</Pagination>
+      <small style={{ color: '#6c757d' }}>
+        Page {currentPage + 1} sur {totalPages}
+      </small>
+    </div>
+  );
 };
 
 export const TopographeTable: React.FC<TopographeTableProps> = ({
@@ -111,95 +281,167 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
   onRetry,
   onUserAction
 }) => {
+  // Styles pour responsive design
+  const tableContainerStyle: React.CSSProperties = {
+    overflowX: 'auto',
+    overflowY: 'visible'
+  };
+
+  const tableStyle: React.CSSProperties = {
+    marginBottom: 0
+  };
+
+  const badgeContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    gap: '0.25rem',
+    flexWrap: 'wrap'
+  };
+
+  const badgeStyle: React.CSSProperties = {
+    fontSize: '0.75rem',
+    fontWeight: '500',
+    letterSpacing: '0.025em'
+  };
+
   if (error) {
     return (
-      <Card className="h-100">
-        <Card.Header className="bg-white py-4">
-          <h4 className="mb-0">Liste des topographes</h4>
+      <Card style={{ height: '100%' }}>
+        <Card.Header style={{ backgroundColor: 'white', padding: '1rem' }}>
+          <h4 style={{ marginBottom: 0 }}>Liste des topographes</h4>
         </Card.Header>
-        <ErrorState error={error} onRetry={onRetry} />
+        <Card.Body>
+          <ErrorState error={error} onRetry={onRetry} />
+        </Card.Body>
       </Card>
     );
   }
 
   return (
-    <Card className="h-100">
-      <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Liste des topographes</h4>
-        <small className="text-muted">
+    <Card style={{ height: '100%' }}>
+      <Card.Header style={{ 
+        backgroundColor: 'white', 
+        padding: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '0.5rem'
+      }}>
+        <h4 style={{ marginBottom: 0 }}>Liste des topographes</h4>
+        <small style={{ color: '#6c757d' }}>
           {pagination.totalElements} topographe{pagination.totalElements !== 1 ? 's' : ''} au total
         </small>
       </Card.Header>
 
       {loading ? (
-        <LoadingState />
+        <Card.Body>
+          <LoadingState />
+        </Card.Body>
       ) : users.length === 0 ? (
-        <EmptyState />
+        <Card.Body>
+          <EmptyState />
+        </Card.Body>
       ) : (
         <>
-          <Table responsive className="text-nowrap mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>Nom</th>
-                <th>Licence</th>
-                <th>Spécialisation</th>
-                <th>Ville</th>
-                <th>Statut</th>
-                <th>Statistiques</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td className="align-middle">
-                    <div className="d-flex align-items-center">
-                      <div className="avatar-md avatar rounded-circle bg-light d-flex align-items-center justify-content-center">
-                        <UserIcon size="20px" className="text-muted" />
-                      </div>
-                      <div className="ms-3 lh-1">
-                        <h5 className="mb-1">{user.firstName} {user.lastName}</h5>
-                        <p className="mb-0 text-muted">{user.email}</p>
-                        <small className="text-muted">{user.phoneNumber}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">
-                    <strong>{user.licenseNumber}</strong>
-                    <br />
-                    <small className="text-muted">#{user.username}</small>
-                  </td>
-                  <td className="align-middle">
-                    <span className="fw-medium">{user.specialization}</span>
-                  </td>
-                  <td className="align-middle">
-                    {user.cityName}
-                  </td>
-                  <td className="align-middle">
-                    {getStatusBadge(user.isActive)}
-                  </td>
-                  <td className="align-middle">
-                    <div className="d-flex gap-2 flex-wrap">
-                      <small className="badge bg-info">{user.totalClients} clients</small>
-                      <small className="badge bg-warning">{user.totalTechniciens} techniciens</small>
-                      <small className="badge bg-success">{user.totalProjects} projets</small>
-                    </div>
-                  </td>
-                  <td className="align-middle">
-                    <TopographeActions 
-                      userId={user.id} 
-                      username={`${user.firstName} ${user.lastName}`}
-                      userEmail={user.email}
-                      isActive={user.isActive}
-                      onAction={onUserAction} 
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          {/* Vue Desktop - Table normale (écrans >= 992px) */}
+          <div style={{ display: 'none' }} className="d-lg-block">
+            <div style={tableContainerStyle}>
+              <Table className="text-nowrap" style={tableStyle}>
+                <thead className="table-light">
+                  <tr>
+                    <th style={{ width: '25%' }}>Nom</th>
+                    <th style={{ width: '15%' }}>Licence</th>
+                    <th style={{ width: '20%' }}>Spécialisation</th>
+                    <th style={{ width: '12%' }}>Ville</th>
+                    <th style={{ width: '8%' }}>Statut</th>
+                    <th style={{ width: '12%' }}>Statistiques</th>
+                    <th style={{ width: '8%' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <div style={{
+                            width: '2.5rem',
+                            height: '2.5rem',
+                            borderRadius: '50%',
+                            backgroundColor: '#f8f9fa',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: '0.75rem'
+                          }}>
+                            <UserIcon size="20px" style={{ color: '#6c757d' }} />
+                          </div>
+                          <div>
+                            <h5 style={{ marginBottom: '0.25rem' }}>{user.firstName} {user.lastName}</h5>
+                            <p style={{ marginBottom: 0, color: '#6c757d' }}>{user.email}</p>
+                            <small style={{ color: '#6c757d' }}>{user.phoneNumber}</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        <strong>{user.licenseNumber}</strong>
+                        <br />
+                        <small style={{ color: '#6c757d' }}>#{user.username}</small>
+                      </td>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        <span style={{ fontWeight: '500' }}>{user.specialization}</span>
+                      </td>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        {user.cityName}
+                      </td>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        {getStatusBadge(user.isActive)}
+                      </td>
+                      <td style={{ verticalAlign: 'middle' }}>
+                        <div style={badgeContainerStyle}>
+                          <small style={{ ...badgeStyle, backgroundColor: '#17a2b8', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
+                          <User size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalClients} clients
+                          </small>
+                          <small style={{ ...badgeStyle, backgroundColor: '#ffc107', color: '#212529', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
+                          <Users size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalTechniciens} techniciens
+                          </small>
+                          <small style={{ ...badgeStyle, backgroundColor: 'grey', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>
+                          <Briefcase size="12px" style={{ marginRight: '0.25rem' }} /> {user.totalProjects} projets
+                          </small>
+                        </div>
+                      </td>
+                      <td style={{ verticalAlign: 'middle', position: 'relative' }}>
+                        <TopographeActions 
+                          userId={user.id} 
+                          username={`${user.firstName} ${user.lastName}`}
+                          userEmail={user.email}
+                          isActive={user.isActive}
+                          onAction={onUserAction} 
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </div>
 
-          <PaginationComponent pagination={pagination} onPageChange={onPageChange} />
+          {/* Vue Mobile/Tablet - Cards (écrans < 992px) */}
+          <div style={{ display: 'block' }} className="d-lg-none">
+            <Card.Body style={{ padding: '1rem' }}>
+              {users.map((user) => (
+                <TopographeMobileCard
+                  key={user.id}
+                  user={user}
+                  onUserAction={onUserAction}
+                />
+              ))}
+            </Card.Body>
+          </div>
+
+          {/* Pagination commune */}
+          <Card.Footer style={{ backgroundColor: 'white', borderTop: '1px solid #dee2e6' }}>
+            <PaginationComponent pagination={pagination} onPageChange={onPageChange} />
+          </Card.Footer>
         </>
       )}
     </Card>

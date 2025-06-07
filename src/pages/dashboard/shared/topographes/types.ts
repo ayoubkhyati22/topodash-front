@@ -55,15 +55,6 @@ export interface Topographe {
     licenseNumber: string;
     specialization: string;
   }
-  
-  export interface City {
-    id: number;
-    name: string;
-    region?: {
-      id: number;
-      name: string;
-    };
-  }
 
   export interface TopographeUpdateRequest {
     email: string;

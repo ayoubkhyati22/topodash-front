@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { TopographeCreateRequest, ApiResponse, City } from '../types';
+import { TopographeCreateRequest, ApiResponse } from '../types';
 import { useAuth } from '../../../../../AuthContext';
+import { City } from 'pages/dashboard/types';
 
 interface UseTopographeFormReturn {
   loading: boolean;

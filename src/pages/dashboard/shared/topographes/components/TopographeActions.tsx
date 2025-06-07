@@ -2,7 +2,6 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
 import { Eye, Mail, MessageCircle, Phone, Trash, User, ToggleLeft, ToggleRight } from 'react-feather';
-import { Link } from 'react-router-dom';
 
 interface UserActionsProps {
   userId: number;
@@ -11,24 +10,6 @@ interface UserActionsProps {
   isActive: boolean;
   onAction?: (action: string, userId: number) => void;
 }
-
-const CustomToggle = React.forwardRef<HTMLAnchorElement, any>(
-  ({ children, onClick }, ref) => (
-    <Link
-      to=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-      className="text-muted text-primary-hover"
-    >
-      {children}
-    </Link>
-  )
-);
-
-CustomToggle.displayName = "CustomToggle";
 
 const TopographeActions: React.FC<UserActionsProps> = ({ 
   userId, 
@@ -72,8 +53,12 @@ const TopographeActions: React.FC<UserActionsProps> = ({
 
   return (
     <Dropdown>
-      <Dropdown.Toggle as={CustomToggle}>
-        <span className="btn btn-light btn-sm">Actions</span>
+      <Dropdown.Toggle 
+        variant="light" 
+        size="sm"
+        id={`dropdown-${userId}`}
+      >
+        Actions
       </Dropdown.Toggle>
       
       <Dropdown.Menu align="end" className="dropdown-menu-lg">

@@ -30,7 +30,7 @@ export const useTopographes = (): UseTopographesReturn => {
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
   const [pagination, setPagination] = useState({
     pageNumber: 0,
-    pageSize: 10,
+    pageSize: 5,
     totalElements: 0,
     totalPages: 0,
   });
@@ -42,13 +42,13 @@ export const useTopographes = (): UseTopographesReturn => {
     filters: SearchFilters;
   }>({
     page: 0,
-    size: 10,
+    size: 5,
     filters: {}
   });
 
   const fetchUsers = useCallback(async (
     page: number = 0, 
-    size: number = 10, 
+    size: number = 5, 
     filters: SearchFilters = {}
   ) => {
     if (!user?.token) {

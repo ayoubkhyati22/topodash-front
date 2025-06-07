@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { TopographeUpdateRequest, ApiResponse, Topographe, City } from '../types';
+import { TopographeUpdateRequest, ApiResponse, Topographe } from '../types';
 import { useAuth } from '../../../../../AuthContext';
+import { City } from 'pages/dashboard/types';
 
 interface UseTopographeEditReturn {
   topographe: Topographe | null;
