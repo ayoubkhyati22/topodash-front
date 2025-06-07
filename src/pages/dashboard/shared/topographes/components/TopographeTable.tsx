@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Card, Pagination, Spinner, Alert } from 'react-bootstrap';
+import { Table, Card, Pagination, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { User as UserIcon, Phone, MapPin, Award, Users, Briefcase, User } from 'react-feather';
 import TopographeActions from './TopographeActions';
 import { Topographe } from '../types';
@@ -51,6 +51,48 @@ const getInitials = (name: string): string => {
     .join('')
     .substring(0, 2)
     .toUpperCase();
+};
+
+// Composant pour afficher la spécialisation avec tooltip
+const SpecializationCell: React.FC<{ specialization: string; userId: number }> = ({ 
+  specialization, 
+  userId 
+}) => {
+  const isLong = specialization.length > 50;
+  
+  if (isLong) {
+    return (
+      <OverlayTrigger
+        placement="top"
+        overlay={
+          <Tooltip id={`tooltip-specialization-${userId}`}>
+            {specialization}
+          </Tooltip>
+        }
+      >
+        <span style={{ 
+          fontWeight: '500',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          lineHeight: '1.4',
+          cursor: 'help'
+        }}>
+          {specialization}
+        </span>
+      </OverlayTrigger>
+    );
+  }
+  
+  return (
+    <span style={{ 
+      fontWeight: '500',
+      lineHeight: '1.4'
+    }}>
+      {specialization}
+    </span>
+  );
 };
 
 // Composant Card pour mobile
@@ -139,10 +181,18 @@ const TopographeMobileCard: React.FC<{
           />
         </div>
 
-        {/* Spécialisation */}
+        {/* Spécialisation avec retour à la ligne */}
         <div style={{ marginBottom: '1rem' }}>
           <small style={{ color: '#6c757d' }}>Spécialisation:</small>
-          <p style={{ marginBottom: 0, fontWeight: '500' }}>{user.specialization}</p>
+          <p style={{ 
+            marginBottom: 0, 
+            fontWeight: '500',
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+            lineHeight: '1.4'
+          }}>
+            {user.specialization}
+          </p>
         </div>
 
         {/* Statistiques */}
@@ -288,7 +338,8 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
   };
 
   const tableStyle: React.CSSProperties = {
-    marginBottom: 0
+    marginBottom: 0,
+    tableLayout: 'fixed' // Permet un meilleur contrôle des largeurs
   };
 
   const badgeContainerStyle: React.CSSProperties = {
@@ -346,16 +397,25 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
           {/* Vue Desktop - Table normale (écrans >= 992px) */}
           <div style={{ display: 'none' }} className="d-lg-block">
             <div style={tableContainerStyle}>
-              <Table className="text-nowrap" style={tableStyle}>
+              <Table responsive style={tableStyle}>
+                <colgroup>
+                  <col style={{ width: '25%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '20%' }} />
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '8%' }} />
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '8%' }} />
+                </colgroup>
                 <thead className="table-light">
                   <tr>
-                    <th style={{ width: '25%' }}>Nom</th>
-                    <th style={{ width: '15%' }}>Licence</th>
-                    <th style={{ width: '20%' }}>Spécialisation</th>
-                    <th style={{ width: '12%' }}>Ville</th>
-                    <th style={{ width: '8%' }}>Statut</th>
-                    <th style={{ width: '12%' }}>Statistiques</th>
-                    <th style={{ width: '8%' }}>Actions</th>
+                    <th>Nom</th>
+                    <th>Licence</th>
+                    <th>Spécialisation</th>
+                    <th>Ville</th>
+                    <th>Statut</th>
+                    <th>Statistiques</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -387,8 +447,17 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                         <br />
                         <small style={{ color: '#6c757d' }}>#{user.username}</small>
                       </td>
-                      <td style={{ verticalAlign: 'middle' }}>
-                        <span style={{ fontWeight: '500' }}>{user.specialization}</span>
+                      <td style={{ 
+                        verticalAlign: 'middle',
+                        maxWidth: '200px',
+                        whiteSpace: 'normal',
+                        wordWrap: 'break-word',
+                        padding: '0.75rem 0.5rem'
+                      }}>
+                        <SpecializationCell 
+                          specialization={user.specialization} 
+                          userId={user.id} 
+                        />
                       </td>
                       <td style={{ verticalAlign: 'middle' }}>
                         {user.cityName}
