@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table, Card, Pagination, Spinner, Alert, Badge } from 'react-bootstrap';
-import { User as UserIcon, Phone, Mail, MapPin, Award, Users, Briefcase, User } from 'react-feather';
+import { Table, Card, Pagination, Spinner, Alert } from 'react-bootstrap';
+import { User as UserIcon, Phone, MapPin, Award, Users, Briefcase, User } from 'react-feather';
 import TopographeActions from './TopographeActions';
 import { Topographe } from '../types';
 
