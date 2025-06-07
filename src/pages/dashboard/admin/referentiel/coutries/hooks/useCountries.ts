@@ -24,8 +24,6 @@ interface UseCountriesResult {
   handlePageSizeChange: (size: number) => void;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 export const useCountries = (initialPageSize = 8): UseCountriesResult => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
