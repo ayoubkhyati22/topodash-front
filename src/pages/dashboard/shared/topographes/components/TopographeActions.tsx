@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
 import { Eye, Mail, MessageCircle, Phone, Trash, User, ToggleLeft, ToggleRight } from 'react-feather';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface UserActionsProps {
   userId: number;

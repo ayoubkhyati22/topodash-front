@@ -20,7 +20,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
     title: "Clients",
     icon: "briefcase",
     link: "/clients",
-    allowedRoles: ["USER"],
+    allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
   {
     id: uuid(),
@@ -55,6 +55,13 @@ export const DashboardMenu: DashboardMenuProps[] = [
     icon: "users",
     link: "/topographes",
     allowedRoles: ["ADMIN"],
+  },
+  {
+    id: uuid(),
+    title: "Clients",
+    icon: "briefcase",
+    link: "/clients",
+    allowedRoles: ["ADMIN","TOPOGRAPHE"],
   },
   {
     id: uuid(),
