@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Phone, MapPin, Award, Users, Briefcase, User } from 'react-feather';
+import { Link } from 'react-router-dom';
 import TopographeActions from './TopographeActions';
 import { Topographe } from '../types';
 
@@ -65,29 +66,54 @@ const TopographeMobileCard: React.FC<TopographeMobileCardProps> = ({ user, onUse
       <Card.Body style={{ padding: '1rem' }}>
         {/* Header avec avatar et nom */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-          <div
-            style={{
-              backgroundColor: avatarColor,
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: '1rem',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              color: 'white'
-            }}
+          <Link 
+            to={`/topographes/${user.id}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            {initials}
-          </div>
+            <div
+              style={{
+                backgroundColor: avatarColor,
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '1rem',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                color: 'white',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {initials}
+            </div>
+          </Link>
           <div style={{ flexGrow: 1 }}>
             <h6 style={{ marginBottom: '0.25rem', fontWeight: 'bold' }}>
-              {user.firstName} {user.lastName}
+              <Link 
+                to={`/topographes/${user.id}`}
+                style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#007bff'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'inherit'}
+              >
+                {user.firstName} {user.lastName}
+              </Link>
             </h6>
             <p style={{ marginBottom: '0.25rem', color: '#6c757d', fontSize: '0.875rem' }}>
-              {user.email}
+              <a 
+                href={`mailto:${user.email}`}
+                style={{ color: '#6c757d', textDecoration: 'none' }}
+              >
+                {user.email}
+              </a>
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {getStatusBadge(user.isActive)}
@@ -104,7 +130,12 @@ const TopographeMobileCard: React.FC<TopographeMobileCardProps> = ({ user, onUse
           </div>
           <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem' }}>
             <Phone size="14px" style={{ marginRight: '0.5rem' }} />
-            <span>{user.phoneNumber}</span>
+            <a 
+              href={`tel:${user.phoneNumber}`}
+              style={{ color: '#6c757d', textDecoration: 'none' }}
+            >
+              {user.phoneNumber}
+            </a>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem', gridColumn: '1 / -1' }}>
             <MapPin size="14px" style={{ marginRight: '0.5rem' }} />

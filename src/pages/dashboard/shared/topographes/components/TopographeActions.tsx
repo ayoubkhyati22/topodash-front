@@ -2,6 +2,7 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
 import { Eye, Mail, MessageCircle, Phone, Trash, User, ToggleLeft, ToggleRight } from 'react-feather';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface UserActionsProps {
   userId: number;
@@ -18,7 +19,14 @@ const TopographeActions: React.FC<UserActionsProps> = ({
   isActive, 
   onAction 
 }) => {
+  const navigate = useNavigate();
+
   const handleAction = (action: string) => {
+    if (action === 'view') {
+      // Naviguer vers la page de détails
+      navigate(`/topographes/${userId}`);
+      return;
+    }
     onAction?.(action, userId);
   };
 

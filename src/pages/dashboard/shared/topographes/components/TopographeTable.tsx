@@ -4,6 +4,7 @@ import { User as UserIcon, Users, Briefcase, User, CheckCircle, BarChart2, MoreH
 import TopographeActions from './TopographeActions';
 import TopographeMobileCard from './TopographeMobileCard';
 import { Topographe } from '../types';
+import { Link } from 'react-router-dom';
 
 interface PaginationData {
   pageNumber: number;
@@ -110,9 +111,9 @@ const StatisticsCell: React.FC<{ user: Topographe }> = ({ user }) => {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
       gap: '0.5rem',
       minWidth: '180px',
       width: '100%'
@@ -136,7 +137,7 @@ const StatisticsCell: React.FC<{ user: Topographe }> = ({ user }) => {
           {user.totalProjects} projets
         </span>
       </div>
-      
+
       {/* Deuxième ligne : Techniciens */}
       <div style={{ display: 'flex', gap: '0.5rem' }}>
         <span style={{
@@ -346,9 +347,37 @@ export const TopographeTable: React.FC<TopographeTableProps> = ({
                             {getInitials(`${user.firstName} ${user.lastName}`)}
                           </div>
                           <div>
-                            <h5 style={{ marginBottom: '0.25rem' }}>{user.firstName} {user.lastName}</h5>
-                            <p style={{ marginBottom: 0, color: '#6c757d' }}>{user.email}</p>
-                            <small style={{ color: '#6c757d' }}>{user.phoneNumber}</small>
+                            {/* Nom cliquable qui mène vers les détails */}
+                            <h5 style={{ marginBottom: '0.25rem' }}>
+                              <Link
+                                to={`/topographes/${user.id}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                  transition: 'color 0.2s ease'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.color = '#007bff'}
+                                onMouseOut={(e) => e.currentTarget.style.color = 'inherit'}
+                              >
+                                {user.firstName} {user.lastName}
+                              </Link>
+                            </h5>
+                            <p style={{ marginBottom: 0, color: '#6c757d' }}>
+                              <a
+                                href={`mailto:${user.email}`}
+                                style={{ color: '#6c757d', textDecoration: 'none' }}
+                              >
+                                {user.email}
+                              </a>
+                            </p>
+                            <small style={{ color: '#6c757d' }}>
+                              <a
+                                href={`tel:${user.phoneNumber}`}
+                                style={{ color: '#6c757d', textDecoration: 'none' }}
+                              >
+                                {user.phoneNumber}
+                              </a>
+                            </small>
                           </div>
                         </div>
                       </td>
