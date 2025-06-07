@@ -11,13 +11,14 @@ import Dashboard from "pages/dashboard/Index";
 import NotFound from "pages/dashboard/pages/NotFound";
 import Documentation from "pages/dashboard/Documentation";
 import ChangeLog from "pages/dashboard/Changelog";
-import Client from "pages/dashboard/user/Client";
 import Collaborateur from "pages/dashboard/user/Collaborateur";
 import Projet from "pages/dashboard/user/Projet";
 import User from "pages/dashboard/admin/users/User";
 import Country from "pages/dashboard/admin/referentiel/coutries/Country";
 import Topographe from "pages/dashboard/shared/topographes/Topographe";
 import TopographeDetailPage from "pages/dashboard/shared/topographes/TopographeDetailPage";
+import Client from "pages/dashboard/shared/clients/Client";
+import ClientDetailPage from "pages/dashboard/shared/clients/ClientDetailPage";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -36,6 +37,11 @@ const App = () => {
           id: "client",
           path: "/clients",
           Component: Client,
+        },
+        {
+          id: "client-detail",
+          path: "/clients/:id",
+          Component: ClientDetailPage,
         },
         {
           id: "collaborateur",
