@@ -76,12 +76,6 @@ export const TopographeForm: React.FC<TopographeFormProps> = ({ onSuccess, onCan
       errors.email = 'Format d\'email invalide';
     }
 
-    if (!formData.password.trim()) {
-      errors.password = 'Le mot de passe est obligatoire';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Le mot de passe doit contenir au moins 8 caractères';
-    }
-
     if (!formData.phoneNumber.trim()) {
       errors.phoneNumber = 'Le numéro de téléphone est obligatoire';
     } else if (!/^[\+]?[0-9]{10,15}$/.test(formData.phoneNumber.replace(/\s/g, ''))) {
@@ -237,39 +231,6 @@ export const TopographeForm: React.FC<TopographeFormProps> = ({ onSuccess, onCan
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>Email <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Entrez l'email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              isInvalid={!!validationErrors.email}
-            />
-            <Form.Control.Feedback type="invalid">
-              {validationErrors.email}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Mot de passe <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Entrez le mot de passe"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              isInvalid={!!validationErrors.password}
-            />
-            <Form.Control.Feedback type="invalid">
-              {validationErrors.password}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
             <Form.Label>Numéro de téléphone <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="tel"
@@ -280,6 +241,26 @@ export const TopographeForm: React.FC<TopographeFormProps> = ({ onSuccess, onCan
             />
             <Form.Control.Feedback type="invalid">
               {validationErrors.phoneNumber}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col md={6}>
+        </Col>
+        <Col md={12}>
+          <Form.Group className="mb-3">
+            <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Entrez l'email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              isInvalid={!!validationErrors.email}
+            />
+            <Form.Control.Feedback type="invalid">
+              {validationErrors.email}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
