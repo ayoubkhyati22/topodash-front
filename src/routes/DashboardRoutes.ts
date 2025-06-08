@@ -2,7 +2,7 @@ import { DashboardMenuProps } from "types";
 import { v4 as uuid } from "uuid";
 
 export const DashboardMenu: DashboardMenuProps[] = [
-  // Accessible à tous
+  // Tous : Tableau de bord
   {
     id: uuid(),
     title: "Tableau de bord",
@@ -11,7 +11,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
     allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
 
-  // ADMIN section
+  // 👑 ADMIN : Administration
   {
     id: uuid(),
     title: "Administration",
@@ -20,7 +20,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
   },
   {
     id: uuid(),
-    title: "Tous les utilisateurs",
+    title: "Utilisateurs",
     icon: "users",
     link: "/users",
     allowedRoles: ["ADMIN"],
@@ -39,7 +39,15 @@ export const DashboardMenu: DashboardMenuProps[] = [
     link: "/clients",
     allowedRoles: ["ADMIN"],
   },
+  {
+    id: uuid(),
+    title: "Techniciens",
+    icon: "users",
+    link: "/techniciens",
+    allowedRoles: ["ADMIN"],
+  },
 
+  // 👑 ADMIN : Référentiel
   {
     id: uuid(),
     title: "Réferentiel",
@@ -54,7 +62,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
     allowedRoles: ["ADMIN"],
   },
 
-  // TOPOGRAPHE section
+  // 🔐 TOPOGRAPHE : Gestion
   {
     id: uuid(),
     title: "Gestion",
@@ -68,8 +76,15 @@ export const DashboardMenu: DashboardMenuProps[] = [
     link: "/clients",
     allowedRoles: ["TOPOGRAPHE"],
   },
+  {
+    id: uuid(),
+    title: "Techniciens",
+    icon: "users",
+    link: "/techniciens",
+    allowedRoles: ["TOPOGRAPHE"],
+  },
 
-  // Documentation (visible pour tous)
+  // Documentation : visible pour les deux rôles
   {
     id: uuid(),
     title: "Documentation",
