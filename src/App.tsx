@@ -19,6 +19,8 @@ import Topographe from "pages/dashboard/shared/topographes/Topographe";
 import TopographeDetailPage from "pages/dashboard/shared/topographes/TopographeDetailPage";
 import Client from "pages/dashboard/shared/clients/Client";
 import ClientDetailPage from "pages/dashboard/shared/clients/ClientDetailPage";
+import Technicien from "pages/dashboard/shared/techniciens/Technicien";
+import TechnicienDetailPage from "pages/dashboard/shared/techniciens/TechnicienDetailPage";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -67,6 +69,16 @@ const App = () => {
           id: "topographe-detail",
           path: "/topographes/:id",
           Component: TopographeDetailPage,
+        },
+        {
+          id: "technicien",
+          path: "/techniciens",
+          Component: Technicien,
+        },
+        {
+          id: "technicien-detail",
+          path: "/techniciens/:id",
+          Component: TechnicienDetailPage,
         },
         {
           id: "country",
