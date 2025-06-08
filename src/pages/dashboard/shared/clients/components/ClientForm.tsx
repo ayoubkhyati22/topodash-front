@@ -278,7 +278,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
       </Row>
 
       <Row>
-        <Col md={12}>
+        <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Email <span className="text-danger">*</span></Form.Label>
             <Form.Control
@@ -290,24 +290,6 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
             />
             <Form.Control.Feedback type="invalid">
               {validationErrors.email}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Mot de passe <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Entrez le mot de passe"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              isInvalid={!!validationErrors.password}
-            />
-            <Form.Control.Feedback type="invalid">
-              {validationErrors.password}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
@@ -326,7 +308,6 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
           </Form.Group>
         </Col>
       </Row>
-
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">
