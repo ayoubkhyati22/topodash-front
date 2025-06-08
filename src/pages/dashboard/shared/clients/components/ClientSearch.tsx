@@ -1,5 +1,5 @@
-// components/ClientSearch.tsx
-import React, { useState } from 'react';
+// components/ClientSearch.tsx - Version corrigée
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { CheckCircle, MapPin, Search, X, User, Briefcase } from 'react-feather';
 import { SearchFilters } from '../types';
@@ -11,6 +11,14 @@ interface ClientSearchProps {
     onClear: () => void;
     loading?: boolean;
     onError?: (error: string) => void;
+}
+
+interface Topographe {
+    id: number;
+    firstName: string;
+    lastName: string;
+    licenseNumber: string;
+    isActive: boolean;
 }
 
 const ClientSearch: React.FC<ClientSearchProps> = ({
@@ -28,6 +36,51 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
         companyName: '',
     });
 
+    // États pour les topographes (admin seulement)
+    const [topographes, setTopographes] = useState<Topographe[]>([]);
+    const [loadingTopographes, setLoadingTopographes] = useState(false);
+
+    const isAdmin = user?.role === 'ADMIN';
+
+    // Charger les topographes si l'utilisateur est admin
+    useEffect(() => {
+        if (isAdmin && user?.token) {
+            fetchTopographes();
+        }
+    }, [isAdmin, user?.token]);
+
+    const fetchTopographes = async () => {
+        if (!user?.token) return;
+
+        try {
+            setLoadingTopographes(true);
+            
+            // Récupérer tous les topographes actifs
+            const response = await fetch('http://localhost:8080/api/topographe?page=0&size=1000&sortBy=firstName&sortDir=asc', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user?.token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            // Filtrer seulement les topographes actifs
+            const activeTopographes = result.data.content.filter((topo: any) => topo.isActive);
+            setTopographes(activeTopographes);
+            
+        } catch (err) {
+            console.error('Erreur lors du chargement des topographes:', err);
+            onError?.('Impossible de charger la liste des topographes');
+        } finally {
+            setLoadingTopographes(false);
+        }
+    };
+
     const handleInputChange = (field: keyof SearchFilters, value: string | boolean | number | undefined) => {
         setFilters(prev => ({
             ...prev,
@@ -41,23 +94,29 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
         try {
             // Nettoyer les filtres vides
             const cleanFilters: SearchFilters = {};
+            
             if (filters.clientType) {
                 cleanFilters.clientType = filters.clientType;
             }
+            
             if (filters.cityName?.trim()) {
                 cleanFilters.cityName = filters.cityName.trim();
             }
+            
             if (filters.isActive !== undefined) {
                 cleanFilters.isActive = filters.isActive;
             }
+            
             // Le filtre topographeId n'est utilisé que pour les admins
-            if (filters.topographeId && user?.role === 'ADMIN') {
+            if (filters.topographeId && isAdmin) {
                 cleanFilters.topographeId = filters.topographeId;
             }
+            
             if (filters.companyName?.trim()) {
                 cleanFilters.companyName = filters.companyName.trim();
             }
 
+            console.log('Filters being sent:', cleanFilters);
             onSearch(cleanFilters);
         } catch (error) {
             onError?.('Erreur lors de la recherche');
@@ -79,10 +138,6 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
         value !== undefined && value !== '' && value !== null
     );
 
-    // Déterminer le nombre de colonnes selon le rôle de l'utilisateur
-    const isAdmin = user?.role === 'ADMIN';
-    const colSize = isAdmin ? 3 : 4; // 4 colonnes pour admin, 3 pour topographe
-
     return (
         <Card className="mb-4">
             <Card.Header className="bg-white py-4">
@@ -94,7 +149,8 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row>
-                        <Col md={colSize}>
+                        {/* Type de client */}
+                        <Col md={isAdmin ? 2 : 3} sm={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <Building size="14px" style={{ marginRight: '0.5rem' }} />
@@ -106,19 +162,15 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                     disabled={loading}
                                 >
                                     <option value="">Tous les types</option>
-                                    <option value="INDIVIDUAL">
-                                        Particulier
-                                    </option>
-                                    <option value="COMPANY">
-                                        Entreprise
-                                    </option>
-                                    <option value="GOVERNMENT">
-                                        Gouvernement
-                                    </option>
+                                    <option value="INDIVIDUAL">Particulier</option>
+                                    <option value="COMPANY">Entreprise</option>
+                                    <option value="GOVERNMENT">Gouvernement</option>
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={colSize}>
+                        
+                        {/* Ville */}
+                        <Col md={isAdmin ? 2 : 3} sm={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <MapPin size="14px" style={{ marginRight: '0.5rem' }} />
@@ -133,7 +185,9 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={colSize}>
+                        
+                        {/* Statut */}
+                        <Col md={isAdmin ? 2 : 3} sm={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <CheckCircle size="14px" style={{ marginRight: '0.5rem' }} />
@@ -153,14 +207,59 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={colSize}>
+
+                        {/* Entreprise */}
+                        <Col md={isAdmin ? 2 : 3} sm={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <Briefcase size="14px" style={{ marginRight: '0.5rem' }} />
+                                    Nom de l'entreprise
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Ex: ACME Corp, Ministère..."
+                                    value={filters.companyName || ''}
+                                    onChange={(e) => handleInputChange('companyName', e.target.value)}
+                                    disabled={loading}
+                                />
+                            </Form.Group>
+                        </Col>
+                        
+                        {/* Champ Topographe visible seulement pour les admins */}
+                        {isAdmin && (
+                            <Col md={2} sm={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>
+                                        <User size="14px" style={{ marginRight: '0.5rem' }} />
+                                        Topographe
+                                    </Form.Label>
+                                    <Form.Select
+                                        value={filters.topographeId || ''}
+                                        onChange={(e) => handleInputChange('topographeId', e.target.value ? parseInt(e.target.value) : undefined)}
+                                        disabled={loading || loadingTopographes}
+                                    >
+                                        <option value="">
+                                            {loadingTopographes ? 'Chargement...' : 'Tous les topographes'}
+                                        </option>
+                                        {topographes.map((topographe) => (
+                                            <option key={topographe.id} value={topographe.id}>
+                                                {topographe.firstName} {topographe.lastName} ({topographe.licenseNumber})
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        )}
+                        
+                        {/* Boutons d'action - toujours en dernier */}
+                        <Col md={2} sm={12}>
                             <Form.Group className="mb-3">
                                 <Form.Label>&nbsp;</Form.Label>
                                 <div className="d-flex gap-2">
                                     <Button
                                         type="submit"
                                         variant="primary"
-                                        disabled={loading}
+                                        disabled={loading || loadingTopographes}
                                         className="flex-grow-1"
                                     >
                                         {loading ? (
@@ -182,6 +281,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                             variant="outline-secondary"
                                             onClick={handleClear}
                                             disabled={loading}
+                                            title="Effacer les filtres"
                                         >
                                             <X size="16px" />
                                         </Button>
@@ -189,48 +289,6 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 </div>
                             </Form.Group>
                         </Col>
-                    </Row>
-
-                    {/* Ligne supplémentaire pour les filtres moins utilisés */}
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>
-                                    <Briefcase size="14px" style={{ marginRight: '0.5rem' }} />
-                                    Nom de l'entreprise
-                                </Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Ex: ACME Corp, Ministère..."
-                                    value={filters.companyName || ''}
-                                    onChange={(e) => handleInputChange('companyName', e.target.value)}
-                                    disabled={loading}
-                                />
-                            </Form.Group>
-                        </Col>
-                        
-                        {/* Champ ID Topographe visible seulement pour les admins */}
-                        {isAdmin && (
-                            <Col md={6}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>
-                                        <User size="14px" style={{ marginRight: '0.5rem' }} />
-                                        ID Topographe
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="ID du topographe responsable"
-                                        value={filters.topographeId || ''}
-                                        onChange={(e) => handleInputChange('topographeId', e.target.value ? parseInt(e.target.value) : undefined)}
-                                        disabled={loading}
-                                        min="1"
-                                    />
-                                    <Form.Text className="text-muted">
-                                        Rechercher les clients d'un topographe spécifique
-                                    </Form.Text>
-                                </Form.Group>
-                            </Col>
-                        )}
                     </Row>
                 </Form>
             </Card.Body>
