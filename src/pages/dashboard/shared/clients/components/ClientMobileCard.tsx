@@ -1,6 +1,6 @@
 // components/ClientMobileCard.tsx
 import React from 'react';
-import { Card, Badge } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Phone, MapPin, User, Briefcase } from 'react-feather';
 import { Link } from 'react-router-dom';
 import ClientActions from './ClientActions';
