@@ -2,40 +2,16 @@ import { DashboardMenuProps } from "types";
 import { v4 as uuid } from "uuid";
 
 export const DashboardMenu: DashboardMenuProps[] = [
+  // Accessible à tous
   {
     id: uuid(),
     title: "Tableau de bord",
     icon: "home",
     link: "/",
-    allowedRoles: ["ADMIN", "USER"],
-  },
-  {
-    id: uuid(),
-    title: "TOPOGRAPHE",
-    grouptitle: true,
-    allowedRoles: ["USER"],
-  },
-  {
-    id: uuid(),
-    title: "Clients",
-    icon: "briefcase",
-    link: "/clients",
     allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
-  {
-    id: uuid(),
-    title: "Collaborateurs",
-    icon: "users",
-    link: "/collaborateurs",
-    allowedRoles: ["USER"],
-  },
-  {
-    id: uuid(),
-    title: "Projets",
-    icon: "folder",
-    link: "/projets",
-    allowedRoles: ["USER"],
-  },
+
+  // ADMIN section
   {
     id: uuid(),
     title: "Administration",
@@ -44,7 +20,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
   },
   {
     id: uuid(),
-    title: "Utilisateurs",
+    title: "Tous les utilisateurs",
     icon: "users",
     link: "/users",
     allowedRoles: ["ADMIN"],
@@ -61,8 +37,9 @@ export const DashboardMenu: DashboardMenuProps[] = [
     title: "Clients",
     icon: "briefcase",
     link: "/clients",
-    allowedRoles: ["ADMIN","TOPOGRAPHE"],
+    allowedRoles: ["ADMIN"],
   },
+
   {
     id: uuid(),
     title: "Réferentiel",
@@ -76,21 +53,41 @@ export const DashboardMenu: DashboardMenuProps[] = [
     link: "/countries",
     allowedRoles: ["ADMIN"],
   },
+
+  // TOPOGRAPHE section
+  {
+    id: uuid(),
+    title: "Gestion",
+    grouptitle: true,
+    allowedRoles: ["TOPOGRAPHE"],
+  },
+  {
+    id: uuid(),
+    title: "Clients",
+    icon: "briefcase",
+    link: "/clients",
+    allowedRoles: ["TOPOGRAPHE"],
+  },
+
+  // Documentation (visible pour tous)
   {
     id: uuid(),
     title: "Documentation",
     grouptitle: true,
+    allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
   {
     id: uuid(),
     title: "Docs",
     icon: "clipboard",
     link: "/documentation",
+    allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
   {
     id: uuid(),
     title: "Changelog",
     icon: "git-pull-request",
     link: "/changelog",
+    allowedRoles: ["ADMIN", "TOPOGRAPHE"],
   },
 ];
