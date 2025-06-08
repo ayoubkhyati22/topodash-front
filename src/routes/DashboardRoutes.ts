@@ -46,6 +46,13 @@ export const DashboardMenu: DashboardMenuProps[] = [
     link: "/techniciens",
     allowedRoles: ["ADMIN"],
   },
+  {
+    id: uuid(),
+    title: "Projets",
+    icon: "folder",
+    link: "/projets",
+    allowedRoles: ["ADMIN"],
+  },
 
   // 👑 ADMIN : Référentiel
   {
@@ -81,6 +88,13 @@ export const DashboardMenu: DashboardMenuProps[] = [
     title: "Techniciens",
     icon: "users",
     link: "/techniciens",
+    allowedRoles: ["TOPOGRAPHE"],
+  },
+  {
+    id: uuid(),
+    title: "Projets",
+    icon: "folder",
+    link: "/projets",
     allowedRoles: ["TOPOGRAPHE"],
   },
 
