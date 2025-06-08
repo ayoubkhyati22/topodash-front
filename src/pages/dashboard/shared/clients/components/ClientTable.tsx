@@ -1,11 +1,12 @@
 import React from 'react';
 import { Table, Card, Pagination, Spinner, Alert } from 'react-bootstrap';
-import { User as UserIcon, MapPin, User, CheckCircle, BarChart2, MoreHorizontal, Briefcase } from 'react-feather';
+import { User as UserIcon, MapPin, User, CheckCircle, BarChart2, MoreHorizontal, Briefcase, Calendar } from 'react-feather';
 import ClientActions from './ClientActions';
 import ClientMobileCard from './ClientMobileCard';
 import { Client } from '../types';
 import { Link } from 'react-router-dom';
 import { Building } from 'react-bootstrap-icons';
+import { useAuth } from '../../../../../AuthContext';
 
 interface PaginationData {
   pageNumber: number;
@@ -80,6 +81,19 @@ const getInitials = (name: string): string => {
     .join('')
     .substring(0, 2)
     .toUpperCase();
+};
+
+// Fonction pour formater la date
+const formatDate = (dateString: string): string => {
+  try {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return dateString;
+  }
 };
 
 // Nouveau composant pour les statistiques sur deux lignes
@@ -231,6 +245,9 @@ export const ClientTable: React.FC<ClientTableProps> = ({
   onRetry,
   onClientAction
 }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+
   // Styles pour responsive design
   const tableContainerStyle: React.CSSProperties = {
     overflowX: 'auto',
@@ -299,7 +316,19 @@ export const ClientTable: React.FC<ClientTableProps> = ({
                   <tr>
                     <th><User size="14px" style={{ marginRight: '0.5rem' }} />Client</th>
                     <th><Building size="14px" style={{ marginRight: '0.5rem' }} />Type</th>
-                    <th><User size="14px" style={{ marginRight: '0.5rem' }} />Topographe</th>
+                    <th>
+                      {isAdmin ? (
+                        <>
+                          <User size="14px" style={{ marginRight: '0.5rem' }} />
+                          Topographe
+                        </>
+                      ) : (
+                        <>
+                          <Calendar size="14px" style={{ marginRight: '0.5rem' }} />
+                          Créé le
+                        </>
+                      )}
+                    </th>
                     <th><MapPin size="14px" style={{ marginRight: '0.5rem' }} />Ville</th>
                     <th><CheckCircle size="14px" style={{ marginRight: '0.5rem' }} />Statut</th>
                     <th><BarChart2 size="14px" style={{ marginRight: '0.5rem' }} />Projets</th>
@@ -371,7 +400,23 @@ export const ClientTable: React.FC<ClientTableProps> = ({
                         )}
                       </td>
                       <td style={{ verticalAlign: 'middle' }}>
-                        <strong>{client.createdByTopographeName}</strong>
+                        {isAdmin ? (
+                          <div>
+                            <strong>{client.createdByTopographeName}</strong>
+                            <br />
+                            <small style={{ color: '#6c757d', display: 'flex', alignItems: 'center' }}>
+                              <Calendar size="12px" style={{ marginRight: '0.25rem' }} />
+                              {formatDate(client.createdAt)}
+                            </small>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d' }}>
+                            <Calendar size="14px" style={{ marginRight: '0.5rem' }} />
+                            <span style={{ fontSize: '0.875rem' }}>
+                              {formatDate(client.createdAt)}
+                            </span>
+                          </div>
+                        )}
                       </td>
                       <td style={{ verticalAlign: 'middle' }}>
                         {client.cityName}

@@ -1,11 +1,12 @@
 // components/ClientMobileCard.tsx
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import { Phone, MapPin, User, Briefcase } from 'react-feather';
+import { Phone, MapPin, User, Briefcase, Calendar } from 'react-feather';
 import { Link } from 'react-router-dom';
 import ClientActions from './ClientActions';
 import { Client } from '../types';
 import { Building } from 'react-bootstrap-icons';
+import { useAuth } from '../../../../../AuthContext';
 
 interface ClientMobileCardProps {
   client: Client;
@@ -70,7 +71,23 @@ const getInitials = (name: string): string => {
     .toUpperCase();
 };
 
+// Fonction pour formater la date
+const formatDate = (dateString: string): string => {
+  try {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return dateString;
+  }
+};
+
 const ClientMobileCard: React.FC<ClientMobileCardProps> = ({ client, onClientAction }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  
   const avatarColor = getAvatarColor(`${client.firstName} ${client.lastName}`);
   const initials = getInitials(`${client.firstName} ${client.lastName}`);
 
@@ -166,8 +183,25 @@ const ClientMobileCard: React.FC<ClientMobileCardProps> = ({ client, onClientAct
             <span>{client.cityName}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', color: '#6c757d', fontSize: '0.875rem' }}>
-            <User size="14px" style={{ marginRight: '0.5rem' }} />
-            <span>Créé par: {client.createdByTopographeName}</span>
+            {isAdmin ? (
+              <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.25rem' }}>
+                  <User size="14px" style={{ marginRight: '0.5rem' }} />
+                  <span>Créé par: {client.createdByTopographeName}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', marginLeft: '2rem' }}>
+                  <Calendar size="12px" style={{ marginRight: '0.25rem' }} />
+                  <small style={{ color: '#6c757d' }}>
+                    {formatDate(client.createdAt)}
+                  </small>
+                </div>
+              </div>
+            ) : (
+              <>
+                <Calendar size="14px" style={{ marginRight: '0.5rem' }} />
+                <span>Créé le: {formatDate(client.createdAt)}</span>
+              </>
+            )}
           </div>
         </div>
 
