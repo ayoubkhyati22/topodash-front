@@ -12,7 +12,6 @@ import NotFound from "pages/dashboard/pages/NotFound";
 import Documentation from "pages/dashboard/Documentation";
 import ChangeLog from "pages/dashboard/Changelog";
 import Collaborateur from "pages/dashboard/user/Collaborateur";
-import Projet from "pages/dashboard/user/Projet";
 import User from "pages/dashboard/admin/users/User";
 import Country from "pages/dashboard/admin/referentiel/coutries/Country";
 import Topographe from "pages/dashboard/shared/topographes/Topographe";
@@ -21,6 +20,8 @@ import Client from "pages/dashboard/shared/clients/Client";
 import ClientDetailPage from "pages/dashboard/shared/clients/ClientDetailPage";
 import Technicien from "pages/dashboard/shared/techniciens/Technicien";
 import TechnicienDetailPage from "pages/dashboard/shared/techniciens/TechnicienDetailPage";
+import Project from "pages/dashboard/shared/projets/Project";
+import ProjectDetailPage from "pages/dashboard/shared/projets/ProjectDetailPage";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -52,8 +53,13 @@ const App = () => {
         },
         {
           id: "projet",
-          path: "/projets",
-          Component: Projet,
+          path: "/projects",
+          Component: Project,
+        },
+        {
+          id: "projet-detail",
+          path: "/projects/:id",
+          Component: ProjectDetailPage,
         },
         {
           id: "user",

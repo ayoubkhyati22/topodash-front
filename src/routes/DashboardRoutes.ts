@@ -50,7 +50,7 @@ export const DashboardMenu: DashboardMenuProps[] = [
     id: uuid(),
     title: "Projets",
     icon: "folder",
-    link: "/projets",
+    link: "/projects",
     allowedRoles: ["ADMIN"],
   },
 
