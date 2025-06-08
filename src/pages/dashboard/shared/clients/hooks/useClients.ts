@@ -14,6 +14,7 @@ interface UseClientsReturn {
   loading: boolean;
   error: string | null;
   searchFilters: SearchFilters;
+  currentUserRole: string | null;
   fetchClients: (page?: number, size?: number, filters?: SearchFilters) => Promise<void>;
   handlePageChange: (page: number) => void;
   handleSearch: (filters: SearchFilters) => void;
@@ -83,9 +84,13 @@ export const useClients = (): UseClientsReturn => {
       if (filters.isActive !== undefined) {
         params.append('isActive', filters.isActive.toString());
       }
-      if (filters.topographeId) {
+      
+      // Pour les admins, permettre la recherche par topographe
+      // Pour les topographes, le filtrage se fait automatiquement côté backend
+      if (filters.topographeId && user.role === 'ADMIN') {
         params.append('topographeId', filters.topographeId.toString());
       }
+      
       if (filters.companyName?.trim()) {
         params.append('companyName', filters.companyName.trim());
       }
@@ -178,7 +183,7 @@ export const useClients = (): UseClientsReturn => {
     } finally {
       setLoading(false);
     }
-  }, [user?.token]);
+  }, [user?.token, user?.role]);
 
   const handlePageChange = useCallback((page: number) => {
     if (page < 0 || (pagination.totalPages > 0 && page >= pagination.totalPages)) {
@@ -190,9 +195,17 @@ export const useClients = (): UseClientsReturn => {
 
   const handleSearch = useCallback((filters: SearchFilters) => {
     console.log('Searching with filters:', filters);
-    setSearchFilters(filters);
-    fetchClients(0, pagination.pageSize, filters);
-  }, [fetchClients, pagination.pageSize]);
+    
+    // Si l'utilisateur est un topographe, ne pas permettre la recherche par topographe
+    // car il ne peut voir que ses propres clients
+    const finalFilters = { ...filters };
+    if (user?.role === 'TOPOGRAPHE') {
+      delete finalFilters.topographeId;
+    }
+    
+    setSearchFilters(finalFilters);
+    fetchClients(0, pagination.pageSize, finalFilters);
+  }, [fetchClients, pagination.pageSize, user?.role]);
 
   const clearSearch = useCallback(() => {
     console.log('Clearing search filters');
@@ -246,6 +259,7 @@ export const useClients = (): UseClientsReturn => {
     loading,
     error,
     searchFilters,
+    currentUserRole: user?.role || null,
     fetchClients,
     handlePageChange,
     handleSearch,

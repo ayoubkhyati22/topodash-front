@@ -1,4 +1,4 @@
-// Client.tsx - Version complète avec gestion des actions
+// Client.tsx - Version complète avec gestion des actions et rôles
 import React, { useState } from 'react';
 import { Col, Row, Container, Button, Toast, ToastContainer } from 'react-bootstrap';
 import { Plus } from 'react-feather';
@@ -17,6 +17,7 @@ const Client: React.FC = () => {
     pagination, 
     loading, 
     error, 
+    currentUserRole,
     fetchClients, 
     handlePageChange, 
     handleSearch,
@@ -197,10 +198,26 @@ const Client: React.FC = () => {
     pagination,
     loading,
     error,
+    currentUserRole,
     selectedClient: selectedClient?.id,
     showStatusModal,
     statusAction
   });
+
+  // Déterminer le titre selon le rôle
+  const getPageTitle = () => {
+    if (currentUserRole === 'ADMIN') {
+      return 'Gestion des clients';
+    }
+    return 'Mes clients';
+  };
+
+  const getPageSubtitle = () => {
+    if (currentUserRole === 'ADMIN') {
+      return `Gestion de tous les clients (${pagination.totalElements} client${pagination.totalElements !== 1 ? 's' : ''})`;
+    }
+    return `Gestion de vos clients (${pagination.totalElements} client${pagination.totalElements !== 1 ? 's' : ''})`;
+  };
 
   return (
     <Container fluid className="p-6">
@@ -209,9 +226,9 @@ const Client: React.FC = () => {
         <Col lg={12} md={12} sm={12}>
           <div className="border-bottom pb-4 mb-4 d-md-flex justify-content-between align-items-center">
             <div className="mb-3 mb-md-0">
-              <h1 className="mb-0 h2 fw-bold">Gestion des clients</h1>
+              <h1 className="mb-0 h2 fw-bold">{getPageTitle()}</h1>
               <p className="mb-0">
-                Gestion de vos clients ({pagination.totalElements} client{pagination.totalElements !== 1 ? 's' : ''})
+                {getPageSubtitle()}
               </p>
             </div>
             <div className="d-flex gap-2">

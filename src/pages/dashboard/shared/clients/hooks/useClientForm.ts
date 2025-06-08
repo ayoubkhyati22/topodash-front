@@ -12,6 +12,7 @@ interface UseClientFormReturn {
   loadingCities: boolean;
   topographes: Array<{ id: number; name: string; licenseNumber: string }>;
   loadingTopographes: boolean;
+  currentUserRole: string | null;
   createClient: (data: ClientCreateRequest) => Promise<boolean>;
   fetchCities: () => Promise<void>;
   fetchTopographes: () => Promise<void>;
@@ -59,7 +60,7 @@ export const useClientForm = (): UseClientFormReturn => {
 
     try {
       setLoadingTopographes(true);
-      // Récupérer seulement les topographes actifs - on utilisera une page assez grande pour tous les récupérer
+      // Récupérer seulement les topographes actifs
       const response = await fetch('http://localhost:8080/api/topographe?page=0&size=1000&sortBy=firstName&sortDir=asc', {
         headers: {
           'Content-Type': 'application/json',
@@ -100,16 +101,23 @@ export const useClientForm = (): UseClientFormReturn => {
     try {
       setLoading(true);
       setError(null);
-      setSuccess(false);
+        setSuccess(false);
 
-      const response = await fetch('http://localhost:8080/api/client', {
+        // Si l'utilisateur est un topographe, ne pas envoyer le createdByTopographeId
+        // car l'affectation sera automatique côté backend
+    const requestData: { createdByTopographeId?: number; [key: string]: any } = { ...data };
+    if (user.role === 'TOPOGRAPHE') {
+            delete requestData.createdByTopographeId;
+    }
+
+    const response = await fetch('http://localhost:8080/api/client', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user?.token}`,
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`,
         },
-        body: JSON.stringify(data),
-      });
+        body: JSON.stringify(requestData),
+    });
 
       if (!response.ok) {
         const errorResult = await response.json();
@@ -125,7 +133,7 @@ export const useClientForm = (): UseClientFormReturn => {
     } finally {
       setLoading(false);
     }
-  }, [user?.token]);
+  }, [user?.token, user?.role]);
 
   const resetForm = useCallback(() => {
     setError(null);
@@ -140,6 +148,7 @@ export const useClientForm = (): UseClientFormReturn => {
     loadingCities,
     topographes,
     loadingTopographes,
+    currentUserRole: user?.role || null,
     createClient,
     fetchCities,
     fetchTopographes,

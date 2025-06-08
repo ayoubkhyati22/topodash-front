@@ -19,6 +19,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
     topographes,
     loadingCities,
     loadingTopographes,
+    currentUserRole,
     createClient, 
     fetchCities,
     fetchTopographes,
@@ -44,8 +45,11 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
 
   useEffect(() => {
     fetchCities();
-    fetchTopographes();
-  }, [fetchCities, fetchTopographes]);
+    // Charger les topographes seulement si l'utilisateur est admin
+    if (currentUserRole === 'ADMIN') {
+      fetchTopographes();
+    }
+  }, [fetchCities, fetchTopographes, currentUserRole]);
 
   useEffect(() => {
     if (success && onSuccess) {
@@ -115,7 +119,8 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
       errors.cityId = 'La ville est obligatoire';
     }
 
-    if (!formData.createdByTopographeId || formData.createdByTopographeId === 0) {
+    // Validation du topographe seulement pour les admins
+    if (currentUserRole === 'ADMIN' && (!formData.createdByTopographeId || formData.createdByTopographeId === 0)) {
       errors.createdByTopographeId = 'Le topographe responsable est obligatoire';
     }
 
@@ -195,6 +200,14 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
         <Alert variant="success" className="mb-4">
           <Alert.Heading>Succès</Alert.Heading>
           <p>Le client a été créé avec succès !</p>
+        </Alert>
+      )}
+
+      {/* Information sur l'affectation automatique pour les topographes */}
+      {currentUserRole === 'TOPOGRAPHE' && (
+        <Alert variant="info" className="mb-4">
+          <Alert.Heading>Information</Alert.Heading>
+          <p>En tant que topographe, le client sera automatiquement affecté à votre compte.</p>
         </Alert>
       )}
 
@@ -356,7 +369,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
       </Row>
 
       <Row>
-        <Col md={6}>
+        <Col md={currentUserRole === 'ADMIN' ? 6 : 12}>
           <Form.Group className="mb-3">
             <Form.Label>Type de client <span className="text-danger">*</span></Form.Label>
             <Form.Select
@@ -373,29 +386,33 @@ export const ClientForm: React.FC<ClientFormProps> = ({ onSuccess, onCancel }) =
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Topographe responsable <span className="text-danger">*</span></Form.Label>
-            <Form.Select
-              value={formData.createdByTopographeId}
-              onChange={(e) => handleInputChange('createdByTopographeId', parseInt(e.target.value))}
-              isInvalid={!!validationErrors.createdByTopographeId}
-              disabled={loadingTopographes}
-            >
-              <option value={0}>
-                {loadingTopographes ? 'Chargement...' : 'Sélectionnez un topographe'}
-              </option>
-              {topographes.map((topographe) => (
-                <option key={topographe.id} value={topographe.id}>
-                  {/* {topographe.firstName} {topographe.lastName} ({topographe.licenseNumber}) */}
+        
+        {/* Champ topographe visible seulement pour les admins */}
+        {currentUserRole === 'ADMIN' && (
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Topographe responsable <span className="text-danger">*</span></Form.Label>
+              <Form.Select
+                value={formData.createdByTopographeId}
+                onChange={(e) => handleInputChange('createdByTopographeId', parseInt(e.target.value))}
+                isInvalid={!!validationErrors.createdByTopographeId}
+                disabled={loadingTopographes}
+              >
+                <option value={0}>
+                  {loadingTopographes ? 'Chargement...' : 'Sélectionnez un topographe'}
                 </option>
-              ))}
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {validationErrors.createdByTopographeId}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+                {topographes.map((topographe) => (
+                  <option key={topographe.id} value={topographe.id}>
+                    {topographe.name} ({topographe.licenseNumber})
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {validationErrors.createdByTopographeId}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
       </Row>
 
       {(formData.clientType === 'COMPANY' || formData.clientType === 'GOVERNMENT') && (

@@ -4,6 +4,7 @@ import { Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { CheckCircle, MapPin, Search, X, User, Briefcase } from 'react-feather';
 import { SearchFilters } from '../types';
 import { Building } from 'react-bootstrap-icons';
+import { useAuth } from '../../../../../AuthContext';
 
 interface ClientSearchProps {
     onSearch: (filters: SearchFilters) => void;
@@ -18,6 +19,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
     loading = false,
     onError
 }) => {
+    const { user } = useAuth();
     const [filters, setFilters] = useState<SearchFilters>({
         clientType: undefined,
         cityName: '',
@@ -48,7 +50,8 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
             if (filters.isActive !== undefined) {
                 cleanFilters.isActive = filters.isActive;
             }
-            if (filters.topographeId) {
+            // Le filtre topographeId n'est utilisé que pour les admins
+            if (filters.topographeId && user?.role === 'ADMIN') {
                 cleanFilters.topographeId = filters.topographeId;
             }
             if (filters.companyName?.trim()) {
@@ -76,6 +79,10 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
         value !== undefined && value !== '' && value !== null
     );
 
+    // Déterminer le nombre de colonnes selon le rôle de l'utilisateur
+    const isAdmin = user?.role === 'ADMIN';
+    const colSize = isAdmin ? 3 : 4; // 4 colonnes pour admin, 3 pour topographe
+
     return (
         <Card className="mb-4">
             <Card.Header className="bg-white py-4">
@@ -87,7 +94,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row>
-                        <Col md={3}>
+                        <Col md={colSize}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <Building size="14px" style={{ marginRight: '0.5rem' }} />
@@ -111,7 +118,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={3}>
+                        <Col md={colSize}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <MapPin size="14px" style={{ marginRight: '0.5rem' }} />
@@ -126,7 +133,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={3}>
+                        <Col md={colSize}>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <CheckCircle size="14px" style={{ marginRight: '0.5rem' }} />
@@ -146,7 +153,7 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={3}>
+                        <Col md={colSize}>
                             <Form.Group className="mb-3">
                                 <Form.Label>&nbsp;</Form.Label>
                                 <div className="d-flex gap-2">
@@ -201,22 +208,29 @@ const ClientSearch: React.FC<ClientSearchProps> = ({
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>
-                                    <User size="14px" style={{ marginRight: '0.5rem' }} />
-                                    ID Topographe
-                                </Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="ID du topographe responsable"
-                                    value={filters.topographeId || ''}
-                                    onChange={(e) => handleInputChange('topographeId', e.target.value ? parseInt(e.target.value) : undefined)}
-                                    disabled={loading}
-                                    min="1"
-                                />
-                            </Form.Group>
-                        </Col>
+                        
+                        {/* Champ ID Topographe visible seulement pour les admins */}
+                        {isAdmin && (
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>
+                                        <User size="14px" style={{ marginRight: '0.5rem' }} />
+                                        ID Topographe
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        placeholder="ID du topographe responsable"
+                                        value={filters.topographeId || ''}
+                                        onChange={(e) => handleInputChange('topographeId', e.target.value ? parseInt(e.target.value) : undefined)}
+                                        disabled={loading}
+                                        min="1"
+                                    />
+                                    <Form.Text className="text-muted">
+                                        Rechercher les clients d'un topographe spécifique
+                                    </Form.Text>
+                                </Form.Group>
+                            </Col>
+                        )}
                     </Row>
                 </Form>
             </Card.Body>
