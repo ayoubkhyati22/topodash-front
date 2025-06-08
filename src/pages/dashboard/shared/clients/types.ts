@@ -1,5 +1,3 @@
-// src/pages/dashboard/shared/clients/types.ts
-
 export interface Client {
   id: number;
   username: string;

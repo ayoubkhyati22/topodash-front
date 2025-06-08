@@ -1,6 +1,5 @@
-// components/ClientTable.tsx
 import React from 'react';
-import { Table, Card, Pagination, Spinner, Alert, Badge } from 'react-bootstrap';
+import { Table, Card, Pagination, Spinner, Alert } from 'react-bootstrap';
 import { User as UserIcon, MapPin, User, CheckCircle, BarChart2, MoreHorizontal, Briefcase } from 'react-feather';
 import ClientActions from './ClientActions';
 import ClientMobileCard from './ClientMobileCard';

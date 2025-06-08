@@ -13,21 +13,30 @@ interface ClientMobileCardProps {
 }
 
 const getClientTypeBadge = (clientType: string) => {
-  const badges = {
-    INDIVIDUAL: { bg: 'primary', text: 'Particulier', icon: <User size="12px" /> },
-    COMPANY: { bg: 'success', text: 'Entreprise', icon: <Building size="12px" /> },
-    GOVERNMENT: { bg: 'warning', text: 'Gouvernement', icon: <Briefcase size="12px" /> }
+    const badges = {
+      INDIVIDUAL: { bg: '#007bff', text: 'Particulier', icon: <User size="12px" style={{ marginRight: '4px' }} /> },    // blue
+      COMPANY: { bg: '#28a745', text: 'Entreprise', icon: <Building size="12px" style={{ marginRight: '4px' }} /> },     // green
+      GOVERNMENT: { bg: '#ffc107', text: 'Gouvernement', icon: <Briefcase size="12px" style={{ marginRight: '4px' }} /> } // yellow
+    };
+  
+    const badge = badges[clientType as keyof typeof badges] || badges.INDIVIDUAL;
+  
+    return (
+      <small
+        style={{
+          backgroundColor: badge.bg,
+          color: 'white',
+          padding: '0.25rem 0.5rem',
+          borderRadius: '0.25rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
+        {badge.icon}
+        {badge.text}
+      </small>
+    );
   };
-  
-  const badge = badges[clientType as keyof typeof badges] || badges.INDIVIDUAL;
-  
-  return (
-    <Badge bg={badge.bg} className="d-flex align-items-center gap-1">
-      {badge.icon}
-      {badge.text}
-    </Badge>
-  );
-};
 
 const getStatusBadge = (isActive: boolean) => {
   return isActive ? (
