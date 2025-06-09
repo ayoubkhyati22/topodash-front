@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, ProgressBar, Badge } from 'react-bootstrap';
+import { Card, ProgressBar } from 'react-bootstrap';
 import { Calendar, User, Clock, CheckCircle, BarChart2 } from 'react-feather';
 import { Link } from 'react-router-dom';
 import ProjectActions from './ProjectActions';
